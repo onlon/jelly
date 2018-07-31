@@ -168,7 +168,8 @@
 					document.getElementById("nickname").innerText = "Hello "+userinfo["nickname"]+" ~";
 					 
 					if(userinfo["head"]){
-						document.getElementById("headImg").src = service.GetImgSrc("head",userinfo["head"])+ "?rnd="+Math.random()+ new Date().getTime();
+//						document.getElementById("headImg").src = service.GetImgSrc("head",userinfo["head"])+ "?rnd="+Math.random()+ new Date().getTime();
+						document.getElementById("headImg").src = 'temp/head1.jpg'
 					}else{
 						if(userinfo["sex"] == 0){
 							document.getElementById("headImg").src = service.GetImgSrc("head","defu_man.png");

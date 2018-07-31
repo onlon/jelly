@@ -327,6 +327,7 @@
 	<script src="js/mui.lazyload.js"></script>
 	<script src="js/mui.lazyload.img.js"></script>
 	<script>
+		
 		mui.init();
 		mui('.mui-scroll-wrapper').scroll({indicators: false});
 		
@@ -374,7 +375,7 @@
 			window.addEventListener("ru",function(){
 				getTaskList(0);
 			});
-			
+			DataLoad();
 			getTaskList(0);
 			plus.webview.currentWebview().setStyle({
 				scrollIndicator: 'none'
@@ -406,45 +407,76 @@
 		});
 		
 		var getUserInfo = function(phone,i){
-			var getuserinfo = {
-				reqKey: "getUserinfoByPhone",
-				input: {
-					phone:phone
-				}
-			};
-			service.OnDoPostServerJson(getuserinfo, false, false, function(jsonData){//jsonData即会返回的结果
-				if (jsonData.result == 0){
-					//console.log(JSON.stringify(jsonData["ansData"]));
-					var headImg = "",sex ="";
-					if(jsonData["ansData"][0]["head"]){
-						headImg = service.GetImgSrc("head",jsonData["ansData"][0]["head"]);
-					}else{
-						if(jsonData["ansData"][0]["sex"] == 0){
-							headImg  = service.GetImgSrc("head","defu_man.png");
-						}else{
-							headImg  = service.GetImgSrc("head","defu_woman.png");
-						}
-					}
-					
-					var name = "nickname"+i;
-					var head = "head"+i;
-					var sexN = "sex"+i;
-					document.getElementById(name).textContent = jsonData["ansData"][0]["nickname"]+sex;
-					//document.getElementById(head).setAttribute("data-lazyload",headImg);
-					document.getElementById(head).src = headImg;
-					
-					if(jsonData["ansData"][0]["sex"] == 0){
-						document.getElementById(sexN).className = "jelly-my-icon icon-nanxing";
-						document.getElementById(sexN).style.color = "#54C8E0";
-						sex  = "<span class='jelly-my-icon icon-nanxing' style='font-size: 20px;color: #007AFF;'></span>";
-					}else{
-						document.getElementById(sexN).className = "jelly-my-icon icon-ysxingbienv";
-						document.getElementById(sexN).style.color = "#FF4D4D";
-					}
+//			var getuserinfo = {
+//				reqKey: "getUserinfoByPhone",
+//				input: {
+//					phone:phone
+//				}
+//			};
+//			service.OnDoPostServerJson(getuserinfo, false, false, function(jsonData){//jsonData即会返回的结果
+//				if (jsonData.result == 0){
+//					//console.log(JSON.stringify(jsonData["ansData"]));
+//					var headImg = "",sex ="";
+//					if(jsonData["ansData"][0]["head"]){
+//						headImg = service.GetImgSrc("head",jsonData["ansData"][0]["head"]);
+//					}else{
+//						if(jsonData["ansData"][0]["sex"] == 0){
+//							headImg  = service.GetImgSrc("head","defu_man.png");
+//						}else{
+//							headImg  = service.GetImgSrc("head","defu_woman.png");
+//						}
+//					}
+//					
+//					var name = "nickname"+i;
+//					var head = "head"+i;
+//					var sexN = "sex"+i;
+//					document.getElementById(name).textContent = jsonData["ansData"][0]["nickname"]+sex;
+//					//document.getElementById(head).setAttribute("data-lazyload",headImg);
+//					document.getElementById(head).src = headImg;
+//					
+//					if(jsonData["ansData"][0]["sex"] == 0){
+//						document.getElementById(sexN).className = "jelly-my-icon icon-nanxing";
+//						document.getElementById(sexN).style.color = "#54C8E0";
+//						sex  = "<span class='jelly-my-icon icon-nanxing' style='font-size: 20px;color: #007AFF;'></span>";
+//					}else{
+//						document.getElementById(sexN).className = "jelly-my-icon icon-ysxingbienv";
+//						document.getElementById(sexN).style.color = "#FF4D4D";
+//					}
+//				}else{
+//					tools.resultError(jsonData.result);
+//				}
+//			});
+
+			var jsonData = JSON.parse(localStorage.getItem('publishers'))[phone]
+			var headImg = "",sex ="";
+			if(jsonData["ansData"][0]["head"]){
+				headImg = jsonData["ansData"][0]["head"];
+			}else{
+				if(jsonData["ansData"][0]["sex"] == 0){
+					headImg  = service.GetImgSrc("head","defu_man.png");
 				}else{
-					tools.resultError(jsonData.result);
+					headImg  = service.GetImgSrc("head","defu_woman.png");
 				}
-			});
+			}
+			
+			var name = "nickname"+i;
+			var head = "head"+i;
+			var sexN = "sex"+i;
+			setTimeout(function(){
+				
+				document.getElementById(name).textContent = jsonData["ansData"][0]["nickname"];
+				
+				document.getElementById(head).src = headImg;
+			
+				if(jsonData["ansData"][0]["sex"] == 0){
+					document.getElementById(sexN).className = "jelly-my-icon icon-nanxing";
+					document.getElementById(sexN).style.color = "#54C8E0";
+					
+				}else{
+					document.getElementById(sexN).className = "jelly-my-icon icon-ysxingbienv";
+					document.getElementById(sexN).style.color = "#FF4D4D";
+				}
+			},1000)
 		}
 		var sortBy = function (filed, rev, primer) {
 		    rev = (rev) ? -1 : 1;
@@ -461,55 +493,92 @@
 		    }
 		};
 		var getTaskList = function(tasktype){
-			var gettasklist = {
-				reqKey: "getTaskByType",
-				input: {
-					task_type:parseInt(tasktype)
-				} 
-			};
+//			var gettasklist = {
+//				reqKey: "getTaskByType",
+//				input: {
+//					task_type:parseInt(tasktype)
+//				} 
+//			};
 			//json请求 doserver
-			service.OnDoPostServerJson(gettasklist, false, false, function(jsonData){//jsonData即会返回的结果
-				if (jsonData.result == 0){
-					var table = document.body.querySelector('.mui-table-view');
-					table.innerHTML = "";
-					if(jsonData["ansData"]){
-						jsonData["ansData"].sort(sortBy('publish_date', false, String));
-						for(var i in jsonData["ansData"]){
-							if(jsonData["ansData"][i]["is_frozen"]==0){
-								var li = document.createElement('li');
-								var status = tools.stateConvertType(jsonData["ansData"][i]["task_state"]);
-								var statusColor = tools.stateConvertColor(jsonData["ansData"][i]["task_state"]);
-								jsonData["ansData"][i]["task_type"] = tools.numConvertType(jsonData["ansData"][i]["task_type"]);
-								
-								getUserInfo(jsonData["ansData"][i]["publisher_phone"],i);
-								
-								li.className = 'mui-table-view-cell';
-								li.innerHTML = '<a href=""><div class="task-status" style="background:'+statusColor+';"><p class="task-status-text">'+status+'</p></div><div class="mui-slider-cell task">'+
-									'<div class="task-head mui-table"><div class="task-head-avatar mui-table-cell"><img id="head'+i+'" src="images/60x60.gif"></div>'+
-									'<div class="task-head-content mui-table-cell"><p id="nickname'+i+'" class="task-head-name" style="display:inline;"></p><span id="sex'+i+'" class="jelly-my-icon icon-nanxing" style="font-size: 20px;color: #007AFF;"></span><p class="task-head-school">锦城学院</p>'+
-									'<p class="task-category-text">'+jsonData["ansData"][i]["task_type"]+'</p></div></div></div><div class="mui-slider-cell task content">'+
-									'<div class="task-head mui-table"><div class="task-head-content mui-table-cell"><p class="task-head-name">'+jsonData["ansData"][i]["context"]+'</p>'+
-									'</div></div></div><div class="mui-slider-cell content"><div class="task-head mui-table"><div class="mui-table-cell"><p class="task-price">佣金：￥'+new Number(jsonData["ansData"][i]["reward"]).toFixed(2)+'</p>'+
-									'<p class="task-price" id="dm"> &nbsp;&nbsp;&nbsp;代买预付：￥'+new Number(jsonData["ansData"][i]["prepay"]).toFixed(2)+'</p><p class="task-time">'+new Date(jsonData["ansData"][i]["publish_date"]).Format("MM-dd hh:mm")+'</p></div></div></div></a>';
-								li.setAttribute("id",jsonData["ansData"][i]["order_id"]);
-								//新纪录插到最前面；
-								table.insertBefore(li, table.firstChild); 
-								if(new Number(jsonData["ansData"][i]["prepay"]).toFixed(2) == 0.0){
-									document.getElementById("dm").innerText = "";
-								}
-							}
-						}
-						if(!table.innerHTML){
-							listNoClass("list","快去发布任务吧");
-						}
-						lazyLoadApi.refresh(true);
-					}else{
-						listNoClass("list","快去发布任务吧");
+//			service.OnDoPostServerJson(gettasklist, false, false, function(jsonData){//jsonData即会返回的结果
+//				if (jsonData.result == 0){
+//					var table = document.body.querySelector('.mui-table-view');
+//					table.innerHTML = "";
+//					if(jsonData["ansData"]){
+//						jsonData["ansData"].sort(sortBy('publish_date', false, String));
+//						for(var i in jsonData["ansData"]){
+//							if(jsonData["ansData"][i]["is_frozen"]==0){
+//								var li = document.createElement('li');
+//								var status = tools.stateConvertType(jsonData["ansData"][i]["task_state"]);
+//								var statusColor = tools.stateConvertColor(jsonData["ansData"][i]["task_state"]);
+//								jsonData["ansData"][i]["task_type"] = tools.numConvertType(jsonData["ansData"][i]["task_type"]);
+//								
+//								getUserInfo(jsonData["ansData"][i]["publisher_phone"],i);
+//								
+//								li.className = 'mui-table-view-cell';
+//								li.innerHTML = '<a href=""><div class="task-status" style="background:'+statusColor+';"><p class="task-status-text">'+status+'</p></div><div class="mui-slider-cell task">'+
+//									'<div class="task-head mui-table"><div class="task-head-avatar mui-table-cell"><img id="head'+i+'" src="images/60x60.gif"></div>'+
+//									'<div class="task-head-content mui-table-cell"><p id="nickname'+i+'" class="task-head-name" style="display:inline;"></p><span id="sex'+i+'" class="jelly-my-icon icon-nanxing" style="font-size: 20px;color: #007AFF;"></span><p class="task-head-school">锦城学院</p>'+
+//									'<p class="task-category-text">'+jsonData["ansData"][i]["task_type"]+'</p></div></div></div><div class="mui-slider-cell task content">'+
+//									'<div class="task-head mui-table"><div class="task-head-content mui-table-cell"><p class="task-head-name">'+jsonData["ansData"][i]["context"]+'</p>'+
+//									'</div></div></div><div class="mui-slider-cell content"><div class="task-head mui-table"><div class="mui-table-cell"><p class="task-price">佣金：￥'+new Number(jsonData["ansData"][i]["reward"]).toFixed(2)+'</p>'+
+//									'<p class="task-price" id="dm"> &nbsp;&nbsp;&nbsp;代买预付：￥'+new Number(jsonData["ansData"][i]["prepay"]).toFixed(2)+'</p><p class="task-time">'+new Date(jsonData["ansData"][i]["publish_date"]).Format("MM-dd hh:mm")+'</p></div></div></div></a>';
+//								li.setAttribute("id",jsonData["ansData"][i]["order_id"]);
+//								//新纪录插到最前面；
+//								table.insertBefore(li, table.firstChild); 
+//								if(new Number(jsonData["ansData"][i]["prepay"]).toFixed(2) == 0.0){
+//									document.getElementById("dm").innerText = "";
+//								}
+//							}
+//						}
+//						if(!table.innerHTML){
+//							listNoClass("list","快去发布任务吧");
+//						}
+//						lazyLoadApi.refresh(true);
+//					}else{
+//						listNoClass("list","快去发布任务吧");
+//					}
+//				}else{ 
+//					tools.resultError(jsonData.result);
+//				}
+//			});
+			
+				
+			var table = document.body.querySelector('.mui-table-view');
+			table.innerHTML = "";
+			
+			var jsonData = JSON.parse(localStorage.getItem('tasks'))
+			
+			for(var i in jsonData["ansData"]){
+				if(jsonData["ansData"][i]["is_frozen"]==0){
+					var li = document.createElement('li');
+					var status = tools.stateConvertType(jsonData["ansData"][i]["task_state"]);
+					var statusColor = tools.stateConvertColor(jsonData["ansData"][i]["task_state"]);
+					jsonData["ansData"][i]["task_type"] = tools.numConvertType(jsonData["ansData"][i]["task_type"]);
+					
+					getUserInfo(jsonData["ansData"][i]["publisher_phone"],i);
+					
+					li.className = 'mui-table-view-cell';
+					li.innerHTML = '<a href=""><div class="task-status" style="background:'+statusColor+';"><p class="task-status-text">'+status+'</p></div><div class="mui-slider-cell task">'+
+						'<div class="task-head mui-table"><div class="task-head-avatar mui-table-cell"><img id="head'+i+'" src="images/60x60.gif"></div>'+
+						'<div class="task-head-content mui-table-cell"><p id="nickname'+i+'" class="task-head-name" style="display:inline;"></p><span id="sex'+i+'" class="jelly-my-icon icon-nanxing" style="font-size: 20px;color: #007AFF;"></span><p class="task-head-school">UoB</p>'+
+						'<p class="task-category-text">'+jsonData["ansData"][i]["task_type"]+'</p></div></div></div><div class="mui-slider-cell task content">'+
+						'<div class="task-head mui-table"><div class="task-head-content mui-table-cell"><p class="task-head-name">'+jsonData["ansData"][i]["context"]+'</p>'+
+						'</div></div></div><div class="mui-slider-cell content"><div class="task-head mui-table"><div class="mui-table-cell"><p class="task-price">佣金：￥'+new Number(jsonData["ansData"][i]["reward"]).toFixed(2)+'</p>'+
+						'<p class="task-price" id="dm"> &nbsp;&nbsp;&nbsp;代买预付：￥'+new Number(jsonData["ansData"][i]["prepay"]).toFixed(2)+'</p><p class="task-time">'+new Date(jsonData["ansData"][i]["publish_date"]).Format("MM-dd hh:mm")+'</p></div></div></div></a>';
+					li.setAttribute("id",jsonData["ansData"][i]["order_id"]);
+					//新纪录插到最前面；
+					table.insertBefore(li, table.firstChild); 
+					if(new Number(jsonData["ansData"][i]["prepay"]).toFixed(2) == 0.0){
+						document.getElementById("dm").innerText = "";
 					}
-				}else{ 
-					tools.resultError(jsonData.result);
 				}
-			});
+			}
+			if(!table.innerHTML){
+				listNoClass("list","快去发布任务吧");
+			}
+			lazyLoadApi.refresh(true);
+			
 		}
 		
 		var listNoClass = function(id,name){
@@ -591,6 +660,158 @@
 		    if(new RegExp("("+ k +")").test(fmt)) 
 		  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length))); 
 		  return fmt; 
+		}
+		
+		function DataLoad(){
+			
+			var tasks = {
+				'ansData':[{
+					'is_frozen':0,
+					'task_type':4,
+					'task_state':1,
+					'publisher_phone':'13814789632',
+					'head':'temp/head2.jpg',
+					'reward':3,
+					'order_id':'10001',
+					'prepay':5,
+					'publish_date':'2018-07-31 17:11',
+					'end_date':'2018-08-31 17:11',
+					'context':'Who can buy me a coke？'
+				},{
+					'is_frozen':0,
+					'task_type':5,
+					'task_state':1,
+					'publisher_phone':'15612369874',
+					'head':'temp/head3.jpg',
+					'reward':0,
+					'order_id':'10002',
+					'prepay':0,
+					'publish_date':'2018-07-31 17:11',
+					'end_date':'2018-08-31 17:11',
+					'context':'LOL'
+				},{
+					'is_frozen':0,
+					'task_type':6,
+					'task_state':1,
+					'publisher_phone':'17741236987',
+					'head':'temp/head4.jpg',
+					'reward':44,
+					'order_id':'10003',
+					'prepay':100,
+					'publish_date':'2018-07-31 17:11',
+					'end_date':'2018-08-31 17:11',
+					'context':'WRSNDM'
+				},{
+					'is_frozen':0,
+					'task_type':1,
+					'task_state':1,
+					'publisher_phone':'18754951166',
+					'head':'temp/head5.jpg',
+					'reward':0,
+					'order_id':'10004',
+					'prepay':10,
+					'publish_date':'2018-07-31 17:11',
+					'end_date':'2018-08-31 17:11',
+					'context':'woyebuzhidaoshuodeshenmejb1'
+				}]
+			}
+			
+			localStorage.setItem('tasks', JSON.stringify(tasks))
+
+			var myhelp = {
+				'ansData':[{
+					'is_frozen':0,
+					'task_type':4,
+					'task_state':2,
+					'publisher_phone':'13814789632',
+					'head':'temp/head2.jpg',
+					'nickname':'nidie',
+					'reward':3,
+					'order_id':'10001',
+					'prepay':5,
+					'publish_date':'2018-07-31 17:11',
+					'end_date':'2018-08-31 17:11',
+					'context':'Who can buy me a coke？'
+				},{
+					'is_frozen':0,
+					'task_type':3,
+					'task_state':4,
+					'publisher_phone':'15612369874',
+					'head':'temp/head3.jpg',
+					'nickname':'json',
+					'reward':0,
+					'order_id':'10002',
+					'prepay':0,
+					'publish_date':'2018-07-31 17:11',
+					'end_date':'2018-08-31 17:11',
+					'context':'LOL'
+				},{
+					'is_frozen':0,
+					'task_type':2,
+					'task_state':4,
+					'publisher_phone':'17741236987',
+					'head':'temp/head4.jpg',
+					'nickname':'ap',
+					'reward':44,
+					'order_id':'10003',
+					'prepay':100,
+					'publish_date':'2018-07-31 17:11',
+					'end_date':'2018-08-31 17:11',
+					'context':'WRSNDM'
+				},{
+					'is_frozen':0,
+					'task_type':1,
+					'task_state':3,
+					'publisher_phone':'18754951166',
+					'head':'temp/head5.jpg',
+					'nickname':'ad',
+					'reward':0,
+					'order_id':'10004',
+					'prepay':10,
+					'publish_date':'2018-07-31 17:11',
+					'end_date':'2018-08-31 17:11',
+					'context':'woyebuzhidaoshuodeshenmejb1'
+				}]
+			}
+			localStorage.setItem('myhelp', JSON.stringify(myhelp))
+			
+			var publishers = {
+				'13814789632':{
+					'ansData':[{
+						'phone':'13814789632',
+						'head':'temp/head2.jpg',
+						'sex':1,
+						'nickname':'BJ'
+					}]
+				},
+				'15612369874':{
+					'ansData':[{
+						'phone':'15612369874',
+						'head':'temp/head3.jpg',
+						'sex':1,
+						'nickname':'q_q'
+					}]
+				},
+				'17741236987':{
+					'ansData':[{
+						'phone':'17741236987',
+						'head':'temp/head4.jpg',
+						'sex':0,
+						'nickname':'df'
+					}]
+				},
+				'18754951166':{
+					'ansData':[{
+						'phone':'18754951166',
+						'head':'temp/head5.jpg',
+						'sex':1,
+						'nickname':'mifans'
+					}]
+				},
+				
+			}
+			
+			localStorage.setItem('publishers', JSON.stringify(publishers))
 		}
 	</script>
 

@@ -127,26 +127,38 @@
 		});
 		
 		var toLogin = function(phone,psw){
-			var tologin = {
-				reqKey: "login",
-				input: {
-					phone:phone,
-					psw:psw
-				}
-			};
+			SetUserInfo([{
+				'phone':phone,
+				'psw':psw,
+				'head':'temp/head1.jpg',
+				'usernameandpsw':{phone:phone, psw:psw},
+				'sex':1,
+				'nickname':'cds',
+				'userID':phone
+			}]);
+			
+			
+			mui.back();
+//			var tologin = {
+//				reqKey: "login",
+//				input: {
+//					phone:phone,
+//					psw:psw
+//				}
+//			};
 			//json请求 doserver
-			service.OnDoPostServerJson(tologin, true, true, function(jsonData){//jsonData即会返回的结果
-				if (jsonData["result"] == 0){
-					SetUserInfo(jsonData["ansData"]);
-					mui.back();
-				} else if(jsonData.result == -3){ 
-					plus.nativeUI.toast("用户名不存在");
-				}else if(jsonData.result == -4){ 
-					plus.nativeUI.toast("密码错误");
-				}else{
-					plus.nativeUI.toast("请求失败,请检查你的网络");
-				}
-			}); 
+//			service.OnDoPostServerJson(tologin, true, true, function(jsonData){//jsonData即会返回的结果
+//				if (jsonData["result"] == 0){
+//					SetUserInfo(jsonData["ansData"]);
+//					mui.back();
+//				} else if(jsonData.result == -3){ 
+//					plus.nativeUI.toast("用户名不存在");
+//				}else if(jsonData.result == -4){ 
+//					plus.nativeUI.toast("密码错误");
+//				}else{
+//					plus.nativeUI.toast("请求失败,请检查你的网络");
+//				}
+//			}); 
 		};
 		
 		//将登录用户信息存在本地
@@ -154,7 +166,7 @@
 			var userinfo = JSON.stringify(info);
 			if(userinfo){
 				localStorage.setItem("isLogin", 1);
-				localStorage.setItem("usernameandpsw", {phone:info[0]["phone"],psw:document.getElementById("password").value});
+				localStorage.setItem("usernameandpsw", info['usernameandpsw']);
 				localStorage.setItem("userInfo", JSON.stringify(info[0]));
 				localStorage.setItem("userID", info[0]["phone"]);
 				localStorage.setItem("head", info[0]["head"]);

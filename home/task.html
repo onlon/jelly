@@ -94,7 +94,7 @@
 			    				<p id="publishDate" class="task-time"></p>
 			    				<p id="publishName" class="task-name" style="display: inline;"></p>
 			    				<span id="sexmark" class='jelly-my-icon icon-nanxing' style='font-size: 20px;color: #007AFF;'></span>
-			    				<p class="text-xs">锦城学院</p>
+			    				<p class="text-xs">UoB</p>
 			    			</div>
 			    		</div>
 			    	</div>
@@ -135,7 +135,7 @@
 			    				<p id="recname" class="task-name" style="display: inline;"></p>
 			    				<span id="sexmark2" class='jelly-my-icon icon-nanxing' style='font-size: 20px;color: #007AFF;'></span>
 			    				<!--<p id="recSex"></p>-->
-			    				<p class="text-xs">锦城学院</p>
+			    				<p class="text-xs">UoB</p>
 			    			</div>
 			    		</div>
 			    	</div>
@@ -203,16 +203,57 @@
       	});
       	
       	var getTaskByNumber = function(numbers){
-      		var gettaskbynum = {
-      			reqKey:"getTaskByNumber",
-				input:{
-					order_id:numbers
-				}
-      		};
-      		//json请求 doserver
-			service.OnDoPostServerJson(gettaskbynum, true, false, function(jsonData){//jsonData即会返回的结果
-				if (jsonData.result == 0){
-					taskinfo = jsonData["ansData"][0];
+//    		var gettaskbynum = {
+//    			reqKey:"getTaskByNumber",
+//				input:{
+//					order_id:numbers
+//				}
+//    		};
+//    		//json请求 doserver
+//			service.OnDoPostServerJson(gettaskbynum, true, false, function(jsonData){//jsonData即会返回的结果
+//				if (jsonData.result == 0){
+//					taskinfo = jsonData["ansData"][0];
+//					if(taskinfo.publisher_phone == localStorage.getItem("userID")){
+//						publisherView(taskinfo);
+//					}else if(taskinfo.recipet_phone == localStorage.getItem("userID")){
+//						accepterView(taskinfo);
+//					}else{
+//						setAccepterBtn(taskinfo.publisher_phone,taskinfo.recipet_phone,taskinfo.order_id,taskinfo.taskinfo_state);;
+//						setPublisher(taskinfo.publisher_phone,taskinfo.context,taskinfo.publish_date,taskinfo.end_date,taskinfo.reward,taskinfo.prepay);
+//						document.getElementById("recipet").style.display = "none";
+//						//点击头像访问个人资料
+//						document.getElementById("publisher").addEventListener("tap",function(){
+//							if(taskinfo.publisher_phone){
+//								mui.openWindow({
+//									url:'otherData.html',
+//									id:'otherData.html',
+//								 	show:{
+//								      autoShow:true,
+//								      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+//								      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+//								    },
+//								    waiting:{
+//								      	autoShow:false
+//								    },
+//									extras:{
+//										recipet_phone:taskinfo.publisher_phone,
+//										webBackName:"task"
+//									}
+//								});
+//							}
+//						},false);
+//					}
+//				}else{ 
+//					console.log(jsonData.result);
+//					tools.resultError(jsonData.result);
+//				}
+//			}); 
+			
+			tasks = JSON.parse(localStorage.getItem('tasks'))['ansData']
+			for(var i in tasks){
+				
+				if(tasks[i]['order_id'] == numbers){
+					taskinfo = tasks[i];
 					if(taskinfo.publisher_phone == localStorage.getItem("userID")){
 						publisherView(taskinfo);
 					}else if(taskinfo.recipet_phone == localStorage.getItem("userID")){
@@ -243,11 +284,8 @@
 							}
 						},false);
 					}
-				}else{ 
-					console.log(jsonData.result);
-					tools.resultError(jsonData.result);
 				}
-			}); 
+			}
       	}
       	var publisherView = function(task){
       		setPublisher(task.publisher_phone,task.context,task.publish_date,task.end_date,task.reward,task.prepay);
@@ -555,268 +593,125 @@
 			},false);
       	}
       	var setPublisher = function(phone,context,publish_date,end_date,reward,prepay){
-			var getuserinfo = {
-				reqKey: "getUserinfoByPhone",
-				input: {
-					phone:phone
-				}
-			};
-			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
-				if (jsonData.result == 0){
-					var headImg = "",sex=jsonData["ansData"][0]["sex"];
-					if(jsonData["ansData"][0]["head"]){
-						headImg = service.GetImgSrc("head",phone+".jpg");
-					}else{
-						if(jsonData["ansData"][0]["sex"] == 0){
-							headImg  = service.GetImgSrc("head","defu_man.png");
-						}else{
-							headImg  = service.GetImgSrc("head","defu_woman.png");
-						}
-					}
-					if(sex == 0){
-						var s = document.getElementById("sexmark");
-						s.className = "jelly-my-icon icon-nanxing";
-						s.style.color = "#54C8E0";
-					}else{
-						var s = document.getElementById("sexmark");
-						s.className = "jelly-my-icon icon-ysxingbienv";
-						s.style.color = "#FF4D4D";
-					}
-					document.getElementById("publishName").textContent = jsonData["ansData"][0]["nickname"];
-					document.getElementById("publishAvatar").src = headImg;
-//					document.getElementById("recSex").textContent = tools.ConvertSex(jsonData["ansData"][0]["sex"]);
-					
+			var jsonData = JSON.parse(localStorage.getItem('publishers'))[phone]
+			
+			var headImg = "",sex=jsonData["ansData"][0]["sex"];
+			if(jsonData["ansData"][0]["head"]){
+				headImg = '../'+jsonData["ansData"][0]["head"];
+			}else{
+				if(jsonData["ansData"][0]["sex"] == 0){
+					headImg  = service.GetImgSrc("head","defu_man.png");
 				}else{
-					tools.resultError(jsonData.result);
+					headImg  = service.GetImgSrc("head","defu_woman.png");
 				}
-			});
+			}
+			if(sex == 0){
+				var s = document.getElementById("sexmark");
+				s.className = "jelly-my-icon icon-nanxing";
+				s.style.color = "#54C8E0";
+			}else{
+				var s = document.getElementById("sexmark");
+				s.className = "jelly-my-icon icon-ysxingbienv";
+				s.style.color = "#FF4D4D";
+			}
+			document.getElementById("publishName").textContent = jsonData["ansData"][0]["nickname"];
+			document.getElementById("publishAvatar").src = headImg;
+			
 			document.getElementById("publishContent").innerHTML = context;
-			end_date = end_date.replace(new RegExp("-","gm"),"/");
-			end_date = end_date.replace(new RegExp("T","gm")," ");
-			end_date = end_date.replace(new RegExp("Z","gm"),"");
-			publish_date = publish_date.replace(new RegExp("-","gm"),"/");
-			publish_date = publish_date.replace(new RegExp("T","gm")," ");
-			publish_date = publish_date.replace(new RegExp("Z","gm"),"");
 			var pubarr = publish_date.split(':');
 			publish_date = pubarr[0] + ":" + pubarr[1];
 			document.getElementById("publishDate").textContent = new Date(publish_date).Format("MM-dd hh:mm");
 			document.getElementById("publishEndDate").textContent = new Date(end_date).Format("MM-dd hh:mm");
 			document.getElementById("publishReward").textContent = '¥'+new Number(reward).toFixed(2);
 			document.getElementById("publishPrepay").textContent = '¥'+new Number(prepay).toFixed(2);
-//			document.getElementById("publishSex").textContent = tools.ConvertSex(sex);
       	}
       	
 		var getUserInfo = function(phone,date){
-			var getuserinfo = {
-				reqKey: "getUserinfoByPhone",
-				input: {
-					phone:phone
-				}
-			};
-			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
-				if (jsonData.result == 0){
-					var headImg = "",sex=jsonData["ansData"][0]["sex"];
-					if(jsonData["ansData"][0]["head"]){
-						headImg = service.GetImgSrc("head",phone+".jpg");
-					}else{
-						if(jsonData["ansData"][0]["sex"] == 0){
-							headImg  = service.GetImgSrc("head","defu_man.png");
-						}else{
-							headImg  = service.GetImgSrc("head","defu_woman.png");
-						}
-					}
-					if(sex == 0){
-						var s = document.getElementById("sexmark2");
-						s.className = "jelly-my-icon icon-nanxing";
-						s.style.color = "#54C8E0";
-					}else{
-						var s = document.getElementById("sexmark2");
-						s.className = "jelly-my-icon icon-ysxingbienv";
-						s.style.color = "#FF4D4D";
-					}
-					document.getElementById("recname").textContent = jsonData["ansData"][0]["nickname"];
-					document.getElementById("recipetAvatar").src = headImg;
-//					document.getElementById("recSex").textContent = tools.ConvertSex(jsonData["ansData"][0]["sex"]);
-					date = date.replace(new RegExp("-","gm"),"/");
-					date = date.replace(new RegExp("T","gm")," ");
-					date = date.replace(new RegExp("Z","gm"),"");
-					var pubarr = date.split(':');
-					date = pubarr[0] + ":" + pubarr[1];
-					document.getElementById("recdate").textContent = new Date(date).Format("MM-dd hh:mm");
+			var jsonData = JSON.parse(localStorage.getItem('publishers'))[phone]
+			var headImg = "",sex=jsonData["ansData"][0]["sex"];
+			if(jsonData["ansData"][0]["head"]){
+				headImg = jsonData["ansData"][0]["head"]
+			}else{
+				if(jsonData["ansData"][0]["sex"] == 0){
+					headImg  = service.GetImgSrc("head","defu_man.png");
 				}else{
-					tools.resultError(jsonData.result);
+					headImg  = service.GetImgSrc("head","defu_woman.png");
 				}
-			});
+			}
+			if(sex == 0){
+				var s = document.getElementById("sexmark2");
+				s.className = "jelly-my-icon icon-nanxing";
+				s.style.color = "#54C8E0";
+			}else{
+				var s = document.getElementById("sexmark2");
+				s.className = "jelly-my-icon icon-ysxingbienv";
+				s.style.color = "#FF4D4D";
+			}
+			document.getElementById("recname").textContent = jsonData["ansData"][0]["nickname"];
+			document.getElementById("recipetAvatar").src = headImg;
+
+			date = date.replace(new RegExp("-","gm"),"/");
+			date = date.replace(new RegExp("T","gm")," ");
+			date = date.replace(new RegExp("Z","gm"),"");
+			var pubarr = date.split(':');
+			date = pubarr[0] + ":" + pubarr[1];
+			document.getElementById("recdate").textContent = new Date(date).Format("MM-dd hh:mm");
+				
 		}
 		
 		var getAccept = function(order_id,phone,receiver){
-			var getuserinfo = {
-				reqKey: "acceptTask",
-				input: {
-					order_id:order_id,
-					accepter_phone:phone
-				}
-			};
-			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
-				if (jsonData.result == 0){
-					var mr = plus.webview.getWebviewById("home.html");
-					if (mr !=null){ 
-						mui.fire(mr, "ru");
-					}
-					mui.alert("请速与发布人联系且在截止日期前完成任务~","接收任务成功",function(){
-						mui.back();
-					});
-//					plus.nativeUI.alert("接收任务成功",function(e){
-//						var i=e.index;
-//						if(i<0){
-//							
-//						}else{
-//							mui.back();	
-//						}
-//					},"提醒","好");
-					var getuserinfo = {
-						reqKey: "getUserinfoByPhone",
-						input: {
-							phone:localStorage.getItem("userID")
-						}
-					};
-					service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
-						if (jsonData.result == 0){
-							var msg = jsonData["ansData"][0]["nickname"]+"接受了你的任务，快去看看吧！";
-							sendMsg(msg,localStorage.getItem("userID"),receiver,order_id);
-						}else{ 
-							tools.resultError(jsonData.result);
-						}
-					});
-				}else{ 
-					tools.resultError(jsonData.result);
-				}
+			var mr = plus.webview.getWebviewById("home.html");
+			if (mr !=null){ 
+				mui.fire(mr, "ru");
+			}
+			mui.alert("请速与发布人联系且在截止日期前完成任务~","接收任务成功",function(){
+				mui.back();
 			});
 		}
 		
 		var acceptDone = function(order_id,receiver){
-			var getuserinfo = {
-				reqKey: "reDoneTask",
-				input: {
-					order_id:order_id
+			var mr = plus.webview.getWebviewById("myTask.html");
+			if (mr !=null){
+				mui.fire(mr, "back");
+			}
+			plus.nativeUI.alert("请耐心等待发布者确认~",function(e){
+				var i=e.index;
+				if(i<0){
+					mui.back();
+				}else{
+					mui.back();	
 				}
-			};
-			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
-				if (jsonData.result == 0){
-					var mr = plus.webview.getWebviewById("myTask.html");
-					if (mr !=null){
-						mui.fire(mr, "back");
-					}
-					plus.nativeUI.alert("请耐心等待发布者确认~",function(e){
-						var i=e.index;
-						if(i<0){
-							mui.back();
-						}else{
-							mui.back();	
-						}
-					},"已确认完成任务","好");
-					var getuserinfo = {
-						reqKey: "getUserinfoByPhone",
-						input: {
-							phone:localStorage.getItem("userID")
-						}
-					};
-					service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
-						if (jsonData.result == 0){
-							var msg = jsonData["ansData"][0]["nickname"]+"完成了你的任务，快去看看吧！~";
-							sendMsg(msg,localStorage.getItem("userID"),receiver,order_id);
-						}else{ 
-							tools.resultError(jsonData.result);
-						}
-					});
-				}else{ 
-					tools.resultError(jsonData.result);
-				}
-			});
+			},"已确认完成任务","好");
 		}
 		
 		var publishDone = function(order_id,receiver){
-			var getuserinfo = {
-				reqKey: "puDoneTask",
-				input: {
-					order_id:order_id
+			var mr = plus.webview.getWebviewById("myTask.html");
+			if (mr !=null){
+				mui.fire(mr, "back");
+			}
+			plus.nativeUI.alert("已确认",function(e){
+				var i=e.index;
+				if(i<0){
+					mui.back();
+				}else{
+					mui.back();	
 				}
-			};
-			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
-				if (jsonData.result == 0){
-					var mr = plus.webview.getWebviewById("myTask.html");
-					if (mr !=null){
-						mui.fire(mr, "back");
-					}
-					plus.nativeUI.alert("已确认",function(e){
-						var i=e.index;
-						if(i<0){
-							mui.back();
-						}else{
-							mui.back();	
-						}
-					},"提醒","好");
-					var getuserinfo = {
-						reqKey: "getUserinfoByPhone",
-						input: {
-							phone:localStorage.getItem("userID")
-						}
-					};
-					service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
-						if (jsonData.result == 0){
-							var msg = jsonData["ansData"][0]["nickname"]+"确认了你做的任务，快去看看吧！";
-							sendMsg(msg,localStorage.getItem("userID"),receiver,order_id);
-						}else{ 
-							tools.resultError(jsonData.result);
-						}
-					});
-				}else{ 
-					tools.resultError(jsonData.result);
-				}
-			});
+			},"提醒","好");
 		}
 		
 		var acceptCancel = function(order_id,receiver){
-			var getuserinfo = {
-				reqKey: "cancelTask",
-				input: {
-					order_id:order_id
+			var mr = plus.webview.getWebviewById("myTask.html");
+			if (mr !=null){ 
+				mui.fire(mr, "back");
+			}
+			plus.nativeUI.alert("取消任务成功",function(e){
+				var i=e.index;
+				if(i<0){
+					mui.back();
+				}else{
+					mui.back();	
 				}
-			};
-			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
-				if (jsonData.result == 0){
-					var mr = plus.webview.getWebviewById("myTask.html");
-					if (mr !=null){ 
-						mui.fire(mr, "back");
-					}
-					plus.nativeUI.alert("取消任务成功",function(e){
-						var i=e.index;
-						if(i<0){
-							mui.back();
-						}else{
-							mui.back();	
-						}
-					},"提醒","好");
-					var getuserinfo = {
-						reqKey: "getUserinfoByPhone",
-						input: {
-							phone:localStorage.getItem("userID")
-						}
-					};
-					service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
-						if (jsonData.result == 0){
-							if(receiver){
-								var msg = jsonData["ansData"][0]["nickname"]+"取消了任务，快去看看吧！\n小帮手提醒你：如果任务已被接受并且离接受时间已超过20分钟，将扣除佣金的20%补偿于你~";
-								sendMsg(msg,localStorage.getItem("userID"),receiver,order_id);
-							}
-						}else{ 
-							tools.resultError(jsonData.result);
-						}
-					});
-				}else{ 
-					tools.resultError(jsonData.result);
-				}
-			});
+			},"提醒","好");
 		}
 		
 		var sendMsg = function(msg_content,sender,receiver,order_id){

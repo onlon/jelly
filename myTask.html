@@ -201,99 +201,85 @@
 		
 		//0 我帮的
 		var toHelp = function(phone){
-			var tohelp = {
-				reqKey: "getTaskOfActivity",
-				input: {
-					phone:phone
-				}
-			};
-			
-			//json请求 doserver
-			service.OnDoPostServerJson(tohelp, false, false, function(jsonData){//jsonData即会返回的结果
-				if(jsonData.result == 0){
-					var table = document.body.querySelector('#list');
-					table.innerHTML = "";
-					if(jsonData["ansData"]){
-						jsonData["ansData"].sort(sortBy('publish_date', false, String));
-						for(var i in jsonData["ansData"]){
-							if(jsonData["ansData"][i]["task_state"]==2||jsonData["ansData"][i]["task_state"]==4){
-								var ul = document.createElement('ul');
-								ul.className = 'mui-table-view';
-								var li = document.createElement('li'),state_color="#00DB00";
-								state_color = tools.stateColor(jsonData["ansData"][i]["task_state"]);
-								jsonData["ansData"][i]["task_type"] = tools.numConvertType(jsonData["ansData"][i]["task_type"]);
-								jsonData["ansData"][i]["task_state"] = tools.stateConvertType(jsonData["ansData"][i]["task_state"]);
-								var headImg = "",sex = "";
-								
-								if(jsonData["ansData"][i]["head"]){
-									headImg = service.GetImgSrc("head",jsonData["ansData"][i]["head"]);
-								}else{
-									if(jsonData["ansData"][i]["sex"] == 0){
-										headImg  = service.GetImgSrc("head","defu_man.png");
-									}else{
-										headImg  = service.GetImgSrc("head","defu_woman.png");
-									}
-								}
-								var money = "";
-								if (new Number(jsonData["ansData"][i]["prepay"]).toFixed(2) != 0.0) {
-									money = new Number(jsonData["ansData"][i]["reward"]).toFixed(2) + "&nbsp;&nbsp;&nbsp;预付：￥"+new Number(jsonData["ansData"][i]["prepay"]).toFixed(2);
-								} else{
-									money = new Number(jsonData["ansData"][i]["reward"]).toFixed(2);
-								}
-								if(jsonData["ansData"][i]["sex"] == 0){
-									sex  = "<span class='jelly-my-icon icon-nanxing' style='font-size: 20px;color: #54C8E0;'></span>";
-								}else{
-									sex  = "<span class='jelly-my-icon icon-ysxingbienv' style='font-size: 20px;color: #FF4D4D;'></span>";
-								}
-								li.className = 'mui-table-view-cell tt';
-								var de = jsonData["ansData"][i]["publish_date"];
-								de = de.replace(new RegExp("-","gm"),"/");
-								de = de.replace(new RegExp("T","gm")," ");
-								de = de.replace(new RegExp("Z","gm"),"");
-								var pubarr = de.split(':');
-								de = pubarr[0] + ":" + pubarr[1];
-								var str = '<a href="javascript:;">\
-											<img class="mui-media-object mui-pull-left" src="{0}">\
-											<div class="mui-media-body">\
-												{1}{2}\
-												<p class="Btn-zhuangtai">\
-													<button style="background-color: {3};border: none;border-radius: 10px;"\onclick="MYeditData()" disabled="disabled">\
-														<font color="aliceblue">{4}</font>\
-													</button>\
-												</p>\
-												<p class="mui-ellipsis">锦城学院</p>\
-												<p class="task-category-text">{5}</p>\
-											</div>\
-											<div style="position: relative;padding-top: 10px;padding-bottom: 10px;">\
-												<p class="text-content">{6}</p>\
-											</div>\
-											<div class="mui-slider-cell content">\
-												<div class="task-head mui-table">\
-													<div class="mui-table-cell">\
-														<p class="task-price">佣金：￥{7}</p>\
-														<p class="task-time">{8}</p>\
-													</div>\
-												</div>\
-											</div>\
-										</a>'.format(headImg,jsonData["ansData"][i]["nickname"],sex,state_color,jsonData["ansData"][i]["task_state"],jsonData["ansData"][i]["task_type"],jsonData["ansData"][i]["context"],money,new Date(de).Format("MM-dd hh:mm"));
-								li.innerHTML = str;
-								li.setAttribute("id",jsonData["ansData"][i]["order_id"]);
-								//新纪录插到最前面； 
-								ul.insertBefore(li, ul.firstChild);
-								table.insertBefore(ul, table.firstChild);	
+
+			var jsonData = JSON.parse(localStorage.getItem('myhelp'))				
+			var table = document.body.querySelector('#list');
+			table.innerHTML = "";
+			if(jsonData["ansData"]){
+				
+				for(var i in jsonData["ansData"]){
+					if(jsonData["ansData"][i]["task_state"]==2||jsonData["ansData"][i]["task_state"]==4){
+						var ul = document.createElement('ul');
+						ul.className = 'mui-table-view';
+						var li = document.createElement('li'),state_color="#00DB00";
+						state_color = tools.stateColor(jsonData["ansData"][i]["task_state"]);
+						jsonData["ansData"][i]["task_type"] = tools.numConvertType(jsonData["ansData"][i]["task_type"]);
+						jsonData["ansData"][i]["task_state"] = tools.stateConvertType(jsonData["ansData"][i]["task_state"]);
+						var headImg = "",sex = "";
+						
+						if(jsonData["ansData"][i]["head"]){
+							headImg = jsonData["ansData"][i]["head"];
+						}else{
+							if(jsonData["ansData"][i]["sex"] == 0){
+								headImg  = service.GetImgSrc("head","defu_man.png");
+							}else{
+								headImg  = service.GetImgSrc("head","defu_woman.png");
 							}
 						}
-						if(!table.innerHTML){
-							listNoClass("list","没有正在进行中的任务");
+						var money = "";
+						if (new Number(jsonData["ansData"][i]["prepay"]).toFixed(2) != 0.0) {
+							money = new Number(jsonData["ansData"][i]["reward"]).toFixed(2) + "&nbsp;&nbsp;&nbsp;预付：￥"+new Number(jsonData["ansData"][i]["prepay"]).toFixed(2);
+						} else{
+							money = new Number(jsonData["ansData"][i]["reward"]).toFixed(2);
 						}
-					}else{
-						listNoClass("list","没有正在进行中的任务");
+						if(jsonData["ansData"][i]["sex"] == 0){
+							sex  = "<span class='jelly-my-icon icon-nanxing' style='font-size: 20px;color: #54C8E0;'></span>";
+						}else{
+							sex  = "<span class='jelly-my-icon icon-ysxingbienv' style='font-size: 20px;color: #FF4D4D;'></span>";
+						}
+						li.className = 'mui-table-view-cell tt';
+						var de = jsonData["ansData"][i]["publish_date"];
+						var pubarr = de.split(':');
+						de = pubarr[0] + ":" + pubarr[1];
+						var str = '<a href="javascript:;">\
+									<img class="mui-media-object mui-pull-left" src="{0}">\
+									<div class="mui-media-body">\
+										{1}{2}\
+										<p class="Btn-zhuangtai">\
+											<button style="background-color: {3};border: none;border-radius: 10px;"\onclick="MYeditData()" disabled="disabled">\
+												<font color="aliceblue">{4}</font>\
+											</button>\
+										</p>\
+										<p class="mui-ellipsis">UoB</p>\
+										<p class="task-category-text">{5}</p>\
+									</div>\
+									<div style="position: relative;padding-top: 10px;padding-bottom: 10px;">\
+										<p class="text-content">{6}</p>\
+									</div>\
+									<div class="mui-slider-cell content">\
+										<div class="task-head mui-table">\
+											<div class="mui-table-cell">\
+												<p class="task-price">佣金：￥{7}</p>\
+												<p class="task-time">{8}</p>\
+											</div>\
+										</div>\
+									</div>\
+								</a>'.format(headImg,jsonData["ansData"][i]["nickname"],sex,state_color,jsonData["ansData"][i]["task_state"],jsonData["ansData"][i]["task_type"],jsonData["ansData"][i]["context"],money,new Date(de).Format("MM-dd hh:mm"));
+						li.innerHTML = str;
+						li.setAttribute("id",jsonData["ansData"][i]["order_id"]);
+						//新纪录插到最前面； 
+						ul.insertBefore(li, ul.firstChild);
+						table.insertBefore(ul, table.firstChild);	
 					}
-					
-				}else{
-					tools.resultError(jsonData.result);
 				}
-			}); 
+				if(!table.innerHTML){
+					listNoClass("list","没有正在进行中的任务");
+				}
+			}else{
+				listNoClass("list","没有正在进行中的任务");
+			}
+					
+				
 		};
 		
 		var listNoClass = function(id,name){
