@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>果冻帮</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/jelly-nav-icon.css">
+		<link rel="stylesheet" href="css/jelly-my-icon.css">
+		<link rel="stylesheet" href="css/jelly-header-icon.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			.mui-plus-pullrefresh .mui-scroll {
+                position: absolute;
+                width: 100%;
+            }
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="title">
+			<h1 id='title' class='mui-title'>果冻帮</h1>
+			<span id ='msg' class='mui-icon jelly-header-icon icon-lingdang mui-pull-right' style='color: #00DB00;right: 15px;font-size: 28px;top:0px;'>
+				<span id ='msgState' style='position: absolute;right: 10px;top: 10px;width: 8px;height: 8px;background-color: #FF5053;border-radius: 4px;display: none;' ></span>
+			</span>
+		</header>
+		<nav class="mui-bar mui-bar-tab"> 
+			<a index="1" id="defaultTab" class="mui-tab-item mui-active" href="home.html" style="color: #00DB00;">
+				<span class="mui-icon jelly-nav icon-yingtao"></span>
+				<span class="mui-tab-label">果冻帮</span>
+			</a>
+			<a id="mytask" index="2" class="mui-tab-item" href="myTask.html">
+				<span class="mui-icon jelly-header-icon icon-renwu" style="font-size: 25px;" ></span>
+				<span class="mui-tab-label">我的任务</span>
+			</a>
+			<a id="my" index="3" class="mui-tab-item" href="my.html">
+				<span class="mui-icon jelly-nav icon-xueshengtiandi"></span>
+				<span class="mui-tab-label">我的</span>
+			</a>
+		</nav> 
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/service.js" ></script>
+		<script type="text/javascript" src="js/tools.js" ></script>
+		<script type="text/javascript" src="js/wacommon.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			
+			// DOMContentLoaded事件处理
+			var _domReady=false;
+			document.addEventListener('DOMContentLoaded',function(){
+				_domReady=true;
+				compatibleAdjust();
+			},false);
+			// 兼容性样式调整
+			var _adjust=false;
+			function compatibleAdjust(){
+				if(_adjust||!window.plus||!_domReady){
+					return;
+				}
+				_adjust=true;
+				// iOS平台特效
+				if('iOS'==plus.os.name){
+					if(navigator.userAgent.indexOf('StreamApp')>=0){	// 在流应用模式下显示返回按钮
+						document.getElementById('back').style.visibility='visible';
+					}
+				}
+				// 关闭启动界面
+				setTimeout(function(){
+					plus.navigator.closeSplashscreen();
+					plus.navigator.setStatusBarBackground('#FFFFFF');
+					if(plus.navigator.isImmersedStatusbar()){
+						plus.navigator.setStatusBarStyle('UIStatusBarStyleBlackOpaque');
+					}
+				},500);
+			}
+		
+			 //mui初始化
+			mui.init();
+			var subpages = ['home.html', 'myTask.html', 'my.html'];
+			var subpage_style = {
+				top: '45px',
+				bottom: '51px'
+			};
+			
+			var aniShow = {};
+			
+			 //创建子页面，首个选项卡页面显示，其它均隐藏；
+			mui.plusReady(function() {
+				
+				localStorage.setItem("isHaveNewMsg",0);
+				
+				setTimeout(getNewVersion,10000);
+				//document.getElementById("msgState").hidden = true;
+				if(localStorage.getItem("isLogin") == null){
+					localStorage.setItem("isLogin",0);
+				}
+				
+				document.getElementById("mytask").style.color ="#666666";
+				document.getElementById("my").style.color ="#666666";
+				
+				var self = plus.webview.currentWebview();
+				for (var i = 0; i < 4; i++) {
+					var temp = {};
+					var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
+					if (i > 0) {
+						sub.hide();
+					}else{
+						temp[subpages[i]] = "true";
+						mui.extend(aniShow,temp);
+					}
+					self.append(sub);
+				}
+				toWeb();
+				
+				//isHaveNewMsg();
+				
+				document.getElementById("msg").addEventListener('tap',function(){
+					if(tools.isLogin() == 1){
+						mui.openWindow({
+					    	url:'msg.html',
+						    id:'msg',
+						    extras:{
+						    	backWebName:"果冻帮"
+						    },
+						 	show:{
+						      autoShow:true,
+						      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+						      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+						    },
+						    waiting:{
+						      	autoShow:false
+						    }
+						});
+					}else{
+						var btnArray = ['等一会儿', '去登陆'];
+						mui.confirm('请先登陆', '你还未登陆', btnArray, function(e) {
+							if (e.index == 1) {
+								mui.openWindow({
+									url: "MyLogin/login.html",
+									id: "login",
+								 	show:{
+								      autoShow:true,
+								      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+								      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+								    },
+								    waiting:{
+								      	autoShow:false
+								    },
+									extras:{
+										
+									}//额外扩展参数
+								});
+							}
+						});
+					}
+				});
+				IsHaveNewMsg();
+			});
+
+			var IsHaveNewMsg = function(){
+				if (tools.isLogin() == 1) {
+					var ishave = {
+						reqKey: "isHaveNewMsg",
+						input: {
+							phone:localStorage.getItem("userID")
+						}
+					};
+					service.OnDoPostServerJson(ishave, false, false, function(jsonData){//jsonData即会返回的结果
+						if (jsonData["result"] == 0){
+							var isHave = jsonData["ansData"][0]["isHave"];
+							//console.log(isHave);
+							if (isHave == 0) {//没有
+								var m = document.getElementById("msg");
+								if (m) {
+									m.style.color = "#00DB00";
+								}
+								var s = document.getElementById("msgState");
+								if(s){
+									s.style.display = "none";
+								}
+								localStorage.setItem("isHaveNewMsg",0);
+							} else if (isHave == 1){//有
+								var m = document.getElementById("msg");
+								if (m) {
+									m.style.color = "#FF5053";
+								}
+								var s = document.getElementById("msgState");
+								if(s){
+									s.style.display = "inherit";
+								}
+								localStorage.setItem("isHaveNewMsg",1);
+							}
+						}else{
+							tools.resultError(jsonData.result);
+						}
+					}); 
+				}
+				setTimeout(IsHaveNewMsg,30000);//每30秒更新一次消息铃铛
+			};
+			
+			var toWeb = function(){
+				 //当前激活选项
+				var activeTab = subpages[0];
+				var title = document.getElementById("title");
+				var activeStyle = document.getElementById("defaultTab").style;
+				 //选项卡点击事件
+				mui('.mui-bar-tab').on('tap', 'a', function(e) {
+					var targetTab = this.getAttribute('href');
+					if (targetTab == activeTab) {
+						return;
+					}
+					var index = this.getAttribute("index");
+					if((index == "2" || index == "3") && tools.isLogin() == "0"){
+						this.style.color = "gray";
+						var btnArray = ['等一会儿', '去登陆'];
+						mui.confirm('请先登陆', '你还未登陆', btnArray, function(e) {
+							if (e.index == 1) {
+								mui.openWindow({
+									url: "MyLogin/login.html",
+									id: "login",
+							 		show:{
+								      autoShow:true,
+								      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+								      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+								    },
+								    waiting:{
+								      	autoShow:false
+								    },
+									extras:{
+										
+									}//额外扩展参数
+								});
+							}
+						});
+					}
+					else{
+						if(index == "1"){
+							if(localStorage.getItem("isHaveNewMsg") == 1){
+								title.innerHTML = "<h1 id='title' class='mui-title'>果冻帮</h1>\
+													<span id ='msg' class='mui-icon jelly-header-icon icon-lingdang mui-pull-right' style='color: #FF5053;right: 15px;font-size: 28px;top:0px;'>\
+														<span id ='msgState' style='position: absolute;right: 10px;top: 10px;width: 8px;height: 8px;background-color: #FF5053;border-radius: 4px;display: inherit;' ></span>\
+													</span>";
+							}else{
+								title.innerHTML = "<h1 id='title' class='mui-title'>果冻帮</h1>\
+													<span id ='msg' class='mui-icon jelly-header-icon icon-lingdang mui-pull-right' style='color: #00DB00;right: 15px;font-size: 28px;top:0px;'>\
+														<span id ='msgState' style='position: absolute;right: 10px;top: 10px;width: 8px;height: 8px;background-color: #FF5053;border-radius: 4px;display: none;' ></span>\
+													</span>";
+							}
+							document.getElementById("msg").addEventListener('tap',function(){
+								if(tools.isLogin() == 1){
+									mui.openWindow({
+								    	url:'msg.html',
+									    id:'msg',
+									 	show:{
+									      autoShow:true,
+									      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+									      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+									    },
+									    waiting:{
+									      	autoShow:false
+									    },
+									    extras:{
+									    	backWebName:"果冻帮"
+									    }
+									});
+								}else{
+									var btnArray = ['等一会儿', '去登陆'];
+									mui.confirm('请先登陆', '你还未登陆', btnArray, function(e) {
+										if (e.index == 1) {
+											mui.openWindow({
+												url: "MyLogin/login.html",
+												id: "login",
+											 	show:{
+											      autoShow:true,
+											      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+											      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+											    },
+											    waiting:{
+											      	autoShow:false
+											    },
+												extras:{
+													
+												}//额外扩展参数
+											});
+										}
+									});
+								}
+							});
+						}
+						if(index == "2"){
+							var myData = plus.webview.getWebviewById("myTask.html");
+							if (myData !=null){
+								mui.fire(myData, "back");
+							}
+							title.innerHTML = "<h1 id='title' class='mui-title'>我的任务</h1>\
+							<div id='pub' style='color: #00DB00;font-size: 24px;text-align: center;position: relative;top:-8px;right: 10px;'>\
+								<span id='colloct' class='mui-icon jelly-header-icon icon-feijifabu mui-pull-right' style='font-size: 25px;' >\
+									<br/>\
+									<font style='font-size: 10px;position: relative;top:-10px;left:-2px'>发布</font>\
+								</span>\
+							</div>";
+							document.getElementById("pub").addEventListener('tap',function(){
+								if(tools.isLogin() == 1){
+									mui.openWindow({
+								    	url:'publish.html',
+									    id:'publish',
+									    extras:{
+									    	backWebName:"我的任务"
+									    },
+									 	show:{
+									      autoShow:true,
+									      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+									      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+									    },
+									    waiting:{
+									      	autoShow:false
+									    }
+									});
+								}else{
+									var btnArray = ['等一会儿', '去登陆'];
+									mui.confirm('请先登陆', '你还未登陆', btnArray, function(e) {
+										if (e.index == 1) {
+											mui.openWindow({
+												url: "MyLogin/login.html",
+												id: "login",
+											 	show:{
+											      autoShow:true,
+											      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+											      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+											    },
+											    waiting:{
+											      	autoShow:false
+											    },
+												extras:{
+													
+												}//额外扩展参数
+											});
+										}
+									});
+								}
+							});
+						
+						}
+						if(index == "3"){
+							title.innerHTML = "<h1 id='title' class='mui-title'>我的</h1>\
+											<span id ='share' class='mui-icon jelly-my-icon icon-fenxiang mui-pull-right' style='color: #00DB00;right: 15px;font-size: 23px;'></span>";
+							document.getElementById("share").addEventListener('tap', function() {
+								shareHref();
+							});
+						}
+						//显示目标选项卡
+						//若为iOS平台或非首次显示，则直接显示
+						if(mui.os.ios||aniShow[targetTab]){
+							plus.webview.show(targetTab);
+						}else{
+							//否则，使用fade-in动画，且保存变量
+							var temp = {};
+							temp[targetTab] = "true";
+							mui.extend(aniShow,temp);
+							plus.webview.show(targetTab,"fade-in",300);
+						}
+						//隐藏当前;
+						plus.webview.hide(activeTab);
+						activeStyle.color = "#666666";
+						this.style.color = "#00DB00";
+						activeStyle = this.style; 
+						//更改当前活跃的选项卡
+						activeTab = targetTab;
+						
+						
+						//自定义事件，模拟点击“首页选项卡”
+						document.addEventListener('gohome', function() {
+							var defaultTab = document.getElementById("defaultTab");
+							//模拟首页点击
+							mui.trigger(defaultTab, 'tap');
+							//切换选项卡高亮
+							var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
+							if (defaultTab !== current) {
+								current.classList.remove('mui-active');
+								defaultTab.classList.add('mui-active');
+							}
+						});
+					}
+					
+				});
+			};
+			//share 操作
+//			var shares=null;
+			//分享链接
+			function shareHref(){
+				bhref=true;
+				var ids=[{id:"weixin",ex:"WXSceneSession"},{id:"weixin",ex:"WXSceneTimeline"},{id:"qq"}],
+				bts=[{title:"发送给微信好友"},{title:"分享到微信朋友圈"}];
+				plus.nativeUI.actionSheet({cancel:"取消",buttons:bts},
+					function(e){
+						var i=e.index;
+						if(i>0){
+							shareAction(ids[i-1].id,ids[i-1].ex);
+						}
+					}
+				);
+			}
+			function shareAction(id,ex) {
+				var s=null;
+				if(!id||!(s=shares[id])){
+					return;
+				} 
+				if ( s.authenticated ) {
+					shareMessage(s,ex);
+				} else {
+					s.authorize( function(){
+							shareMessage(s,ex);
+						},function(e){
+					});
+				}
+			}
+			//发送分享消息
+			function shareMessage(s,ex){
+				var msg = {
+					content:"快来和我一起帮助同学，赚取佣金吧~【果冻帮】",
+					extra:{
+						scene:ex
+					},
+					title:"果冻帮",
+					href:"www.jellyit.cn",
+					thumbs:["_www/images/logo.png"],
+					pictures:["_www/images/logo.png"]
+				};
+				s.send( msg, function(){
+				}, function(e){
+				});
+			}
+			//更新分享服务列表
+			function updateSerivces(){
+				plus.share.getServices( function(s){
+					shares={};
+					for(var i in s){
+						var t=s[i];
+						shares[t.id]=t;
+					}
+				}, function(e){
+				} );
+			}
+			//分享准备工作
+			function plusReady(){
+				updateSerivces();
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener("plusready",plusReady,false);
+			}
+			
+			//判断版本
+			var getNewVersion = function(){
+				if (tools.isLogin() == 1) {
+					var ishave = {
+						reqKey: "getNewVersion"
+					};
+					service.OnDoPostServerJson(ishave, false, false, function(jsonData){//jsonData即会返回的结果
+						if (jsonData["result"] == 0){
+							if(jsonData["ansData"][0]["newVersion"]){
+								var newVersion = jsonData["ansData"][0]["newVersion"];
+								if (newVersion != plus.runtime.version) {
+									var btnArray = ['去下载','忽略' ];
+									mui.confirm('快去下载最新版本吧~\nPS:请注意在wifi环境下更新', '有新版本', btnArray, function(e) {
+										if (e.index == 0) { 
+											if(mui.os.ios){
+												var ios_path = jsonData["ansData"][0]["ios_path"];
+												plus.runtime.openURL(ios_path);
+											}else{
+												var xUrl = service.DownloadVersion(newVersion);
+												var dtask = plus.downloader.createDownload( xUrl, {}, function ( d, status ) {
+												    if ( status == 200 ) { // 下载成功
+												        var path = d.filename;
+												        plus.runtime.install(path);
+												    } else {//下载失败
+												        mui.alert( "下载失败，请检查你的网络~"); 
+												    }  
+												});
+												dtask.start();
+											}
+										}
+									});
+								} 
+							}
+						}else{
+							tools.resultError(jsonData.result);
+						}
+					}); 
+				}
+				else{
+					setTimeout(getNewVersion,10000);//每60秒
+				}
+			}
+			
+			var bqa= new BackQuitApp();
+			mui.back = function() {
+				bqa.QuitApp();
+			};
+		</script>
+	</body>chat
+</html>

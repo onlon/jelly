@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/jelly-my-icon.css" />
+		<title></title>
+	</head>
+	<style type="text/css">
+		.mui-table-view .mui-media-object{
+			max-width: 60px;
+			height: 60px;
+			border-radius: 50%;
+		}
+		.mui-table-view-cell>a:not(.mui-btn) {
+				white-space: normal;
+		}
+		.text-content{
+				padding-left: 10px;
+				font-size: 15px;
+				color: #808080;
+		}
+		.task-category-text{
+				float: right;
+				font-size: 12px;
+				padding-right: 10px;
+		}
+		.task-time {
+				float: right;
+				font-size: 12px;
+				padding-right: 10px;
+		}
+		.task-price {
+				display: inline;
+				font-size: 12px;
+				padding-left: 10px;
+		}
+		.Btn-zhuangtai{
+			float: right;
+		}
+		.mui-navigate-right::after, .mui-push-right::after {
+			right: 1px;
+			content: '\e583';
+		}
+		.mui-table-view{
+			margin-top: 7px;
+		}
+		.mui-table-view:before{
+			background-color: transparent;
+		}
+		.mui-table-view:after{
+			background-color: transparent;
+		}
+	</style>
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00DB00;">
+				<span class="mui-icon mui-icon-left-nav"></span>
+				<font size="2" id="backWebName">我的</font>
+			</button>
+		    <h1 class="mui-title">我帮的</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div id="list" style="margin-top: 52px;"></div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/service.js"></script>
+		<script src="../js/tools.js"></script>
+		<script type="text/javascript">
+		mui.init({
+			swipeBack: true //启用右滑关闭功能
+		});
+		mui('.mui-scroll-wrapper').scroll({indicators: false});//使页面带有滚动且隐藏滚动条
+		
+		//页面打开时加载函数，只执行一次
+		mui.plusReady(function(){
+			tools.StringFormatDemo();
+			var phone = localStorage.getItem("userID");
+			toHelp(phone);
+			
+			// 处理点击事件
+			mui('#list').on('tap','.list',function(){
+				var h = this.getAttribute('id');
+				mui.openWindow({
+					url:'../home/task.html',
+					id:'../home/task.html',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    },
+					extras:{
+						taskid:h,
+						webBackName:"我帮的"
+					}
+				});
+			});
+		}); 
+		
+		var sortBy = function (filed, rev, primer) {
+		    rev = (rev) ? -1 : 1;
+		    return function (a, b) {
+		        a = a[filed];
+		        b = b[filed];
+		        if (typeof (primer) != 'undefined') {
+		            a = primer(a);
+		            b = primer(b);
+		        }
+		        if (a < b) { return rev * -1; }
+		        if (a > b) { return rev * 1; }
+		        return 1;
+		    }
+		};
+		
+		//0 我帮的
+		var toHelp = function(phone){
+			var tohelp = {
+				reqKey: "getTaskAccepter",
+				input: { 
+					phone:phone
+				}
+			};
+			
+			//json请求 doserver
+			service.OnDoPostServerJson(tohelp, true, false, function(jsonData){//jsonData即会返回的结果
+				if(jsonData.result == 0){
+					var table = document.body.querySelector('#list');
+					table.innerHTML = "";
+					if(jsonData["ansData"]){
+						jsonData["ansData"].sort(sortBy('publish_date', false, String));
+						for(var i in jsonData["ansData"]){
+							var ul = document.createElement('ul');
+							ul.className = 'mui-table-view';
+							var li = document.createElement('li'),state_color="#00DB00";
+							state_color = tools.stateColor(jsonData["ansData"][i]["task_state"]);
+							jsonData["ansData"][i]["task_type"] = tools.numConvertType(jsonData["ansData"][i]["task_type"]);
+							
+							jsonData["ansData"][i]["task_state"] = tools.stateConvertType(jsonData["ansData"][i]["task_state"]);
+							var headImg = "",sex = "";
+							
+							if(jsonData["ansData"][i]["head"]){
+								headImg = service.GetImgSrc("head",jsonData["ansData"][i]["head"].toString());
+							}else{
+								if(jsonData["ansData"][i]["sex"] == 0){
+									headImg  = service.GetImgSrc("head","defu_man.png");
+								}else{
+									headImg  = service.GetImgSrc("head","defu_woman.png");
+								}
+							}
+							if(jsonData["ansData"][i]["sex"] == 0){
+								sex  = "<span class='jelly-my-icon icon-nanxing' style='font-size: 20px;color: #54C8E0;'></span>";
+							}else{
+								sex  = "<span class='jelly-my-icon icon-ysxingbienv' style='font-size: 20px;color: #FF4D4D;'></span>";
+							}
+							var money = "";
+							if (new Number(jsonData["ansData"][i]["prepay"]).toFixed(2) != 0.0) {
+								money = new Number(jsonData["ansData"][i]["reward"]).toFixed(2) + "&nbsp;&nbsp;&nbsp;预付：￥"+new Number(jsonData["ansData"][i]["prepay"]).toFixed(2);
+							} else{
+								money = new Number(jsonData["ansData"][i]["reward"]).toFixed(2);
+							}
+							var datearr = jsonData["ansData"][i]["publish_date"].split('-');
+							jsonData["ansData"][i]["publish_date"] = datearr[1]+'-'+datearr[2];
+							li.className = 'mui-table-view-cell list';
+							li.innerHTML = '<a href="javascript:;">\
+											<img class="mui-media-object mui-pull-left" src="{0}">\
+											<div class="mui-media-body">\
+												{1}{2}\
+												<p class="Btn-zhuangtai">\
+													<button style="background-color: {3};border: none;border-radius: 10px;" disabled="disabled">\
+														<font color="aliceblue">{4}</font>\
+													</button>\
+												</p>\
+												<p class="mui-ellipsis">锦城学院</p>\
+												<p class="task-category-text">{5}</p>\
+											</div>\
+											<div  style="position: relative;padding-top: 10px;padding-bottom: 10px;">\
+												<p class="text-content">{6}</p>\
+											</div>\
+											<div class="mui-slider-cell content">\
+												<div class="task-head mui-table">\
+													<div class="mui-table-cell">\
+														<p class="task-price">佣金：￥{7}</p>\
+														<p class="task-time">{8}</p>\
+													</div>\
+												</div>\
+											</div>\
+										</a>'.format(headImg,jsonData["ansData"][i]["nickname"],sex,state_color,jsonData["ansData"][i]["task_state"],jsonData["ansData"][i]["task_type"],jsonData["ansData"][i]["context"],money,jsonData["ansData"][i]["publish_date"]);
+							li.setAttribute("id",jsonData["ansData"][i]["order_id"]);
+							//新纪录插到最前面；
+							ul.insertBefore(li, ul.firstChild);
+							table.insertBefore(ul, table.firstChild);
+						}
+					}else{
+						listNoClass("list","快去接受任务吧~");
+					}
+					
+				}else{
+					tools.resultError(jsonData);
+				}
+			}); 
+		};
+		
+		var listNoClass = function(id,name){
+			tools.StringFormatDemo();
+			document.getElementById(id).innerHTML = "<ul class='mui-table-view'>\
+														<li class='mui-table-view-cell' style='text-align: center;background-color: #efeff4;'>\
+														<br />\
+														<br />\
+														<img src='../images/zanwu.png' style='width: 120px;opacity:0.4'/>\
+														<br />\
+														<span style='font-size: 14px;color: gray;'>{0}</span>\
+														<br />\
+														<br />\
+														</li>\
+													</ul>".format(name);
+		};
+		
+		Date.prototype.Format = function(fmt)   
+		{ //author: meizz   
+		  var o = {   
+		    "M+" : this.getMonth()+1,                 //月份   
+		    "d+" : this.getDate(),                    //日   
+		    "h+" : this.getHours(),                   //小时   
+		    "m+" : this.getMinutes(),                 //分   
+		    "s+" : this.getSeconds(),                 //秒   
+		    "q+" : Math.floor((this.getMonth()+3)/3), //季度   
+		    "S"  : this.getMilliseconds()             //毫秒   
+		  };   
+		  if(/(y+)/.test(fmt))   
+		    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+		  for(var k in o)   
+		    if(new RegExp("("+ k +")").test(fmt))   
+		  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+		  return fmt;   
+		}
+		</script>
+	</body>
+</html>

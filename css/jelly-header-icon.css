@@ -1,0 +1,18 @@
+
+@font-face {font-family: "header";
+  src: url('../fonts/jelly-header-icon.ttf') format('truetype');
+}
+.jelly-header-icon {
+  font-family:"header" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-renwu:before { content: "\e602"; }
+.icon-feijifabu:before { content: "\e600"; }
+.icon-qian:before { content: "\e603"; }
+.icon-xingxing:before { content: "\e604"; }
+.icon-aixin:before { content: "\e605"; }
+.icon-lingdang:before { content: "\e601"; }

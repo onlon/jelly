@@ -1,0 +1,14 @@
+
+@font-face {font-family: "appeal";
+	src: url('../fonts/jelly-my-appeal.ttf') format('truetype');  
+}
+
+.jelly-my-appeal {
+  font-family:"appeal" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-appeal:before { content: "\e600"; }

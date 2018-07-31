@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<title></title>
+		<style type="text/css">
+			.my-text{
+				color:#fff;
+			}
+		</style>
+	</head>
+	<script src="../js/mui.min.js"></script>
+<style type="text/css">
+	.gd-set-avatar{
+				text-align: center;
+				padding:32px 10px;
+			}
+			
+			.gd-set-avatar img {
+				border-radius: 50%;
+				height: 60px;
+			}
+			.mui-navigate-right{
+				padding-left: 10px;
+				vertical-align: super;
+			}
+			.mui-table-view-cell{
+				padding: 4px 10px;
+			}
+</style>
+<script>
+	function MYmoney(){
+		window.location.href='../PersonalCenter/myMoney.html'; 
+	}
+	function MYhelp(){
+		window.location.href='../PersonalCenter/help.html'; 
+	}
+	function MYfeedback(){
+		window.location.href='../PersonalCenter/feedback.html'; 
+	}
+	function MYabout(){
+		window.location.href='../PersonalCenter/about.html'; 
+	}
+	function MYeditData(){
+		window.location.href='../PersonalCenter/Editdata .html'; 
+	}
+</script>
+<body>
+		
+		<div class="mui-content">
+			
+			<div style="background-color: blueviolet;padding-top: 0px;width: 100%;">
+					<div class="gd-set-avatar" style="text-align: center;">
+					<a href="#">
+						<img src="../img/3.jpg"/></br>
+						<font size="4" color="aliceblue">四川大学锦城学院</font>
+					</a>
+					
+					</div>
+					<div style="width: 100%;height: 50px;display: flex;">
+						<div class="" style="width:50%;border-right: 2px solid #fff;
+							text-align: center;padding-left: 60px;">
+							<p class="my-text">男</p>
+							<p class="my-text">性别</p>
+						</div>
+						<div style="width:50%;text-align: center;padding-right: 60px;">
+							<p class="my-text">30</p>
+							<p class="my-text">年龄</p>
+						</div>
+						
+						
+					</div>
+					
+					<div style="text-align: center;margin-top: 10px;padding-bottom: 20px;" >
+						<button style="width: 30%;background-color: gray;border: none;" onclick="MYeditData()">
+							<font color="aliceblue">编辑个人资料</font></button>
+					</div>
+				
+			</div>
+			<div id="" style="">
+				<button style="width: 50%;background-color: white;border: none;">
+							<font color="black">我帮的</font></button>
+				<button style="width: 49%;background-color: white;border: none;float: right;">
+							<font color="black">帮我的</font></button>
+							
+			</div>
+			<div id="" style="margin-top: 20px;">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell" onclick="MYmoney()">
+					<div >
+						<img src="../img/2.jpg" style="width: 10%;"/>
+						<a class="mui-navigate-right">
+							我的钱包
+						</a>
+					</div>
+					
+				</li>
+				<li class="mui-table-view-cell" onclick="MYhelp()">
+					<div>
+						<img src="../img/2.jpg" style="width: 10%;"/>
+						<a class="mui-navigate-right">
+							帮助
+						</a>
+					</div>
+					
+				</li>
+				<li class="mui-table-view-cell" onclick="MYfeedback()">
+					<div >
+						<img src="../img/2.jpg" style="width: 10%;"/>
+						<a class="mui-navigate-right">
+							反馈
+						</a>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div>
+						<img src="../img/2.jpg" style="width: 10%;"/>
+						<a class="mui-navigate-right">
+							分享
+						</a>
+					</div>
+					
+				</li>
+				<li class="mui-table-view-cell" onclick="MYabout()">
+					<div>
+						<img src="../img/2.jpg" style="width: 10%;"/>
+						<a class="mui-navigate-right">
+							关于
+						</a>
+					</div>
+					
+				</li>
+			</ul>
+			</div>
+		</div>
+	</body>
+</html>

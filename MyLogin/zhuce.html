@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<title></title>
+	</head>
+	<style>
+		input[type="color"],
+		input[type="date"],
+		input[type="datetime-local"],
+		input[type="datetime"],
+		input[type="email"],
+		input[type="month"],
+		input[type="number"],
+		input[type="password"],
+		input[type="search"],
+		input[type="tel"],
+		input[type="text"],
+		input[type="time"],
+		input[type="url"],
+		input[type="week"],
+		select,
+		textarea {
+			height: 50px;
+		}
+		
+		::-moz-placeholder {
+			/* Mozilla Firefox 19+ */
+			color: rgb(103, 197, 47);
+		}
+		
+		input,
+		select,
+		textarea {
+			font-size: 16px;
+		}
+		
+		.mui-btn-block {
+			margin-top: 30px;
+		}
+		#getidentfy{
+			position: absolute;
+			right: 30px;
+			
+		}
+		/* 通用 */
+		::-webkit-input-placeholder { 
+			font-size: 14px;
+			color: gray;
+			font-weight: 400;
+			/*color:#0FA1F2;*/ 
+		}
+	</style>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00BD00;">
+				<span class="mui-icon mui-icon-left-nav"></span>
+				<font size="2">登录</font>
+			</button>
+			<h1 class="mui-title">注册</h1>
+		</header>
+		<div class="mui-content" style="padding-left: 30px;padding-right: 30px;">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll" style="text-align: center;">
+					<div class="text" style=" text-align:center;margin-top: 50px;margin-bottom:5px;color: #00Bd00;">
+						<img src="../images/logo-l.png" style="width: 100px;display: "/>
+						<br /><br />
+						<font style="font-size: 20px;">果冻帮</font>
+					</div>
+					<input id="phone" placeholder="请输入电话号码" data-input-password="3" class="mui-input-password" type="text" style="border: 0px;margin-top: 30px;background-color:transparent;font-size: 17px;border-bottom:solid 1px #00Bd00;width: 90%;"/>
+					<input id="code" placeholder="请输入验证码" data-input-password="3" class="mui-input-password" type="text" style="border: 0px;background-color:transparent;font-size: 17px;border-bottom:solid 1px #00Bd00;width: 90%;"/>
+					<button id="getidentfy" type="button" class="mui-btn mui-btn-success mui-btn-outlined mui-pull-right" style="margin-right:20px;width: 100px; font-size: 13px;height: 40px;">获取验证码</button>
+					<input id="password" placeholder="请输入密码" data-input-password="3" class="mui-input-password" type="password" style="border: 0px;margin-top: 0px; background-color: transparent;font-size: 17px;border-bottom:solid 1px #00Bd00;width: 90%;"/>	
+					<div class="clickbutton" style="text-align: center"> 
+						<button id="sign" class="mui-btn mui-btn-success mui-btn-primary" style="height: 40px;width:90%;margin-top: 20px;">
+							注册
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/service.js"></script>
+		<script type="text/javascript" src="../js/tools.js"></script>
+		<script type="text/javascript">
+			mui.init();
+		
+			var smsCode; 
+			var serVerIdentify = "";//服务器返回的验证码
+			var chickTime = 0;
+			var serPhone = "";
+			var isPhone = function(inputString)
+	     	{
+		          var partten = /^1[3,4,5,7,8]\d{9}$/;
+		          if(partten.test(inputString)){
+		               return true;
+		          }
+		          else{
+		               return false;
+		          }
+	     	};
+			var funcTimeBack = function()
+			{
+				if(chickTime != 0)
+				{
+					getidentfy.innerHTML = chickTime + "秒";
+					chickTime--;
+					setTimeout(funcTimeBack, 1000);
+					getidentfy.disabled =true;
+				}
+				else{
+					getidentfy.innerHTML = "再次发送";
+					getidentfy.disabled =false;
+				}
+			};
+			var havePhone = function(phone){
+				var judegUniquePhone = {
+					reqKey:"judegUniquePhone", 
+					input:{
+						phone: phone.value
+					}
+				}
+				service.OnDoPostServerJson(judegUniquePhone,true,true,function(jsonData){
+					if(jsonData.result == 0){
+						var ret = JSON.parse(jsonData["ansData"][0]["isHave"]);
+						
+						if(ret== 1){
+							plus.nativeUI.toast("手机号已被注册");
+						}else{
+							SerVerIdentify(phone.value);
+						}
+					}
+					else{
+						plus.nativeUI.toast("网络出错，请重试");
+					}
+				});
+			};
+			var SerVerIdentify = function(phone){
+				serVerIdentify = "";
+				serPhone = "";
+				if (chickTime == 0) 
+				{
+					service.OnDoPostServerJsonSMS(phone,function(data){
+						switch(data.result){
+							case -1:
+								plus.nativeUI.toast("请稍后重试");
+								break;
+							case 1000:
+								plus.nativeUI.toast("提交失败"); 
+								break;
+							case 1002:
+								//plus.nativeUI.toast("发送成功");
+								chickTime = 60;
+								funcTimeBack();
+								serVerIdentify = data.verify//服务器返回的验证码
+								serPhone= document.getElementById("phone").value;
+								break;
+							case 1403:
+								plus.nativeUI.toast("手机号码不能为空");
+								break;
+							case 5030:
+								plus.nativeUI.toast("手机号码已被列入黑名单");
+								break;
+							case 1406:
+								plus.nativeUI.toast("手机格式不正确");
+								break;	
+							default:
+								plus.nativeUI.toast(data.msg);
+								break;
+							}
+					});
+				}
+				else
+				{
+					plus.nativeUI.toast("请稍后重试"); 
+				}
+			};
+			
+			var signIn = function(phone,psw){
+				var signJson = {
+				reqKey: "register",
+				input: {
+					phone:phone,
+					psw:psw
+				}
+				}
+				//json请求 doserver
+				service.OnDoPostServerJson(signJson, true, true, function(jsonData){
+					//jsonData即会返回的结果
+					if (jsonData["result"] == 0){
+						plus.nativeUI.toast("注册成功");
+						mui.back();
+					}else{ 
+						plus.nativeUI.toast("请求失败,请检查你的网络");
+					}
+				}); 
+			};
+			
+			
+			mui.plusReady(function(){
+				var num = document.getElementById('code');
+				var getidenty = document.getElementById("getidentfy");
+				var phone = document.getElementById("phone");
+				var pwd = document.getElementById("password");
+				getidentfy.addEventListener('click', function() {
+					if(!isPhone(phone.value))
+					{
+						plus.nativeUI.toast("请输入正确的手机号");
+						return;
+					}else{
+						havePhone(phone);
+					}
+				}, false);
+				document.getElementById("sign").addEventListener("tap",function(){
+					if(!isPhone(phone.value)){
+						plus.nativeUI.toast("请输入正确的手机号");
+					}
+					else if(serVerIdentify == "")
+					{
+						plus.nativeUI.toast("请获取验证码");
+					}
+					else if(num.value != serVerIdentify)//输入的验证码与服务器验证码对比是否一致
+					{
+						plus.nativeUI.toast("验证码错误");
+					}
+					else if(phone.value != serPhone)//输入的验证码与服务器验证码对比是否一致
+					{
+						plus.nativeUI.toast("更换手机号需重新获取验证码");
+					}
+					else if(pwd.value.length < 6)
+					{
+						plus.nativeUI.toast("请输6位以上密码");
+					}
+					else
+					{
+						signIn(phone.value,pwd.value);
+					}
+				});
+			});
+			
+			
+			
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>个人资料编辑</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link href="../../css/mui.picker.css" rel="stylesheet" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.mui-table-view-cell{
+				font-size: 15px;
+				color: #555;
+			}
+			.mui-scroll-wrapper{
+				margin-top: 40px;
+			}
+			.mui-table-view{
+				margin-top: 15px;
+			}
+			.mui-table-view-cell{
+				line-height: 20px;
+			}
+			.noo:before{
+				background-color: white;
+			}
+			.noo:after{
+				background-color: white;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00BD00;">
+					<span class="mui-icon mui-icon-left-nav"></span>
+					<font size="2">我的资料</font>
+				</button>
+				<h1 class="mui-center mui-title">编辑</h1>
+		</header>
+			<div class="mui-content">
+				<div class="mui-scroll-wrapper">
+					<ul class="mui-table-view noo" >
+						<li class="mui-table-view-cell">
+							<a id="head" class="mui-navigate-right">头像
+								<span class="mui-pull-right head">
+									<img class=" mui-action-preview" id="head-img1" src="../../images/60x60.gif" style="border-radius:20px;width:40px;margin-right: 20px;"/>
+								</span>
+							</a>
+						</li>
+					</ul>
+					<ul class="mui-table-view noo" >
+						<li class="mui-table-view-cell">
+							<a id="name" class="mui-navigate-right">姓名<span id="nameResult" class="mui-pull-right" style="margin-right: 20px;font-size: 15px;"></span></a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a id="sex" class="mui-navigate-right">性别<span id="sexResult" class="mui-pull-right" style="margin-right: 20px;font-size: 15px;"></span></a>
+						</li>
+						<li  class="mui-table-view-cell" id="ageT">
+							<a id="age" class="mui-navigate-right">年龄<span id="ageResult" class="mui-pull-right" style="margin-right: 20px;font-size: 15px;"></span></a>
+						</li>
+					</ul>
+					<ul class="mui-table-view noo">
+						<li class="mui-table-view-cell">
+							<a id="phone" >电话<span id="phoneResult" class="mui-pull-right" style="margin-right: 5px;font-size: 15px;"></span></a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a id="school" >学校<span id="schoolResult" class="mui-pull-right" style="margin-right: 5px;font-size: 15px;"></span></a>
+						</li>
+					</ul>
+					<ul class="mui-table-view noo">
+						<li class="mui-table-view-cell">
+							<a id="sign" class="mui-navigate-right">个性签名<span id="signText" class="mui-pull-right" style="margin-right: 20px;font-size: 15px;"></span></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</body> 
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/service.js"></script>
+		<script src="../../js/mui.picker.js"></script>
+		<script src="../../js/mui.poppicker.js"></script>
+		<script src="../../js/jquery1.42.min.js"></script>
+		<script>
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+		
+		//请一定注意,关于html5的所有东西都要在此函数内使用，否则会出很多意想不到的问题
+		//特别关于调用硬件设备
+		//返回并刷新  返回页面的id  PS：一般用于顶部导航栏的返回键刷新
+		var backUpdate = function(webID){
+			var old_back = mui.back;
+			mui.back = function(){
+				var myData = plus.webview.getWebviewById("myData.html");
+				if(myData != null){
+					mui.fire(myData, "refurbish");
+				}
+				
+				var opener = plus.webview.getWebviewById("my.html");
+				if(opener != null){
+					mui.fire(opener, "refurbishMy");
+				}
+				old_back();
+			}
+		};
+		mui.plusReady(function() {
+			onUserInfo();
+			editSex();
+			reditAge();
+			
+			backUpdate();//保证刷新
+			window.addEventListener('refurbish',function(){
+				onUserInfo();
+			});
+			//编辑跳转
+			document.getElementById("name").addEventListener('tap', function() {
+				mui.openWindow({
+					url:'editName.html',
+					id:'editName',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    }
+				});
+			});
+//			document.getElementById("school").addEventListener('tap', function() {
+//			});
+//			document.getElementById("phone").addEventListener('tap', function() {
+//			});
+			document.getElementById("sign").addEventListener('tap', function() {
+				mui.openWindow({
+					url:'editsign.html',
+					id:'editsign',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    }
+				});
+			});
+			
+			document.getElementById("head").addEventListener('tap', function() {
+				var a = [{
+					title: "拍照"
+				}, {
+					title: "从手机相册选择"
+				}, {
+					title: "还原默认头像"
+				}];
+				plus.nativeUI.actionSheet({
+					title: "修改头像",
+					cancel: "取消",
+					buttons: a
+				}, function(b) {
+					switch (b.index) {
+						case 0:
+							break;
+						case 1:
+							getImage();
+							break;
+						case 2:
+							galleryImg();
+							break;
+						case 3:
+							toDefaultHeadImg();
+							break;
+						default:
+							break
+					}
+				});
+			});
+		});
+
+		var verifyImg = null; 
+		//通过摄像头设置图片 
+		function getImage() {
+			var c = plus.camera.getCamera();
+			c.captureImage(function(e) {
+				plus.io.resolveLocalFileSystemURL(e, function(entry) {
+					verifyImg = entry.toLocalURL() + "?version=" + new Date().getTime();
+					
+					//加载图片数组
+					uploadPics(verifyImg);
+					
+					//变更大图预览的src
+					//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+				   //document.querySelector("#__mui-imageview__group .mui-slider-item img").src = s + "?version=" + new Date().getTime();;;
+				}, function(e) {
+					console.log("读取拍照文件错误：" + e.message);
+				});
+			}, function(s) {
+				console.log("error" + s);
+			}, {
+				filename: "_doc/head.jpg"
+			})
+		}
+
+		function galleryImg() {
+			plus.gallery.pick(function(a) {
+				plus.io.resolveLocalFileSystemURL(a, function(entry) {
+					plus.io.resolveLocalFileSystemURL("_doc/", function(root) {
+						root.getFile("head.jpg", {}, function(file) {
+							//文件已存在
+							file.remove(function() {
+								entry.copyTo(root, 'head.jpg', function(e) {
+										verifyImg = e.fullPath + "?version=" + new Date().getTime();
+										//加载图片数组
+										uploadPics(verifyImg);
+										document.getElementById("head-img1").src = verifyImg;
+										//变更大图预览的src
+										//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+										//document.querySelector("#__mui-imageview__group .mui-slider-item img").src = e + "?version=" + new Date().getTime();;
+									},
+									function(e) {
+										console.log('copy image fail:' + e.message);
+									});
+							}, function() {
+								console.log("delete image fail:" + e.message);
+							});
+						}, function() {
+							//文件不存在
+							entry.copyTo(root, 'head.jpg', function(e) {
+									verifyImg = e.fullPath + "?version=" + new Date().getTime();
+									//加载图片数组
+									uploadPics(verifyImg);
+									document.getElementById("head-img1").src = verifyImg;
+									//变更大图预览的src
+									//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+									//document.querySelector("#__mui-imageview__group .mui-slider-item img").src = path;
+								},function(e) {
+									console.log('copy image fail:' + e.message);
+								});
+						});
+					}, function(e) {
+						console.log("get _www folder fail");
+					})
+				}, function(e) {
+					console.log("读取拍照文件错误：" + e.message);
+				});
+			}, function(a) {}, { 
+				filter: "image"
+			})
+		};
+			
+		var f1 = null;
+		function uploadPics(url) {
+				if(f1 != null)
+					f1 = null; 
+				var img = new Image();
+				img.src = url; // 传过来的图片路径在这里用。
+				img.onload = function() {
+					var that = this;
+					//生成比例 
+					var w = that.width,
+						h = that.height,
+						scale = w / h;
+					w = 200; //480  你想压缩到多大，改这里
+					h = 200;
+					//生成canvas
+					var canvas = document.createElement('canvas');
+					var ctx = canvas.getContext('2d');
+					$(canvas).attr({
+						width:w,
+						height:h
+					});
+					ctx.drawImage(that, 0, 0, w, h);
+					var base64 = canvas.toDataURL('image/jpeg', 1 || 0.8); //1最清晰，越低越模糊。有一点不清楚这里明明设置的是jpeg。弹出 base64 开头的一段 data：image/png;却是png。哎开心就好，开心就好
+					
+					f1 = base64; // 把base64数据丢过去，上传要用。
+					var pic = document.getElementById("head-img1");
+					pic.src = base64; //这里丢到img 的 src 里面就能看到效果了
+					
+					OnChangeHeadImg();//每次自动触发 
+				};
+				
+		}; 
+		
+		//上传 ,此处是默认上传，故没有触发事件
+		function OnChangeHeadImg()
+		{
+			if(f1 != null)
+			{
+				var reqParm = {
+					reqKey: "toChangeHead",
+					input:{
+						phone:localStorage.getItem("userID")
+					}
+				}
+				service.OnDoPostServerJsonHead(reqParm,f1, true, false, function(jsonData) {
+					if (jsonData.result == 0) {
+						plus.nativeUI.toast("修改成功");
+						var  userInfo = service.GetUserInfo();
+						if(!userInfo["head"]){
+							service.SetUserInfo("head", localStorage.getItem("userID")+".jpg");
+						}
+						
+						var myData = plus.webview.getWebviewById("myData.html");
+						if(myData != null){
+							mui.fire(myData, "refurbish");
+						}
+						
+						var opener = plus.webview.getWebviewById("my.html");
+						if(opener != null){
+							mui.fire(opener, "refurbishMy");
+						}
+					} else {
+						plus.nativeUI.toast("修改失败");
+					}
+				});
+			}
+		};
+		
+		//还原默认头像
+		function toDefaultHeadImg()
+		{
+			var defaultHeadImg = {
+				reqKey: "toDefaultHeadImg",
+				input: {
+					phone: localStorage.getItem("userID")
+				}
+			}
+			service.OnDoPostServerJson(defaultHeadImg,true, false, function(jsonData) {
+				if (jsonData.result == 0) {
+					var  userInfo = service.GetUserInfo();
+					if(userInfo["head"]){
+						service.SetUserInfo("head","");
+						
+						var myData = plus.webview.getWebviewById("myData.html");
+						if(myData != null){
+							mui.fire(myData, "refurbish");
+						}
+						
+						var opener = plus.webview.getWebviewById("my.html");
+						if(opener != null){
+							mui.fire(opener, "refurbishMy");
+						}
+						
+		                if(userInfo["sex"] == 0){
+							document.getElementById("head-img1").src = service.GetImgSrc("head","defu_man.png");
+						}else{
+							document.getElementById("head-img1").src = service.GetImgSrc("head","defu_woman.png");
+						}
+						plus.nativeUI.toast("还原成功");
+					}
+				} else {
+					plus.nativeUI.toast("还原失败");
+				}
+			});
+		};
+		//修改sex
+		var editSex =function(){
+			var updateSex = {};
+			var userSelect = document.getElementById("sexResult");
+			document.getElementById("sex").addEventListener('tap',function () {
+				var btnArray = [{title:"男"}, {title:"女"}];
+				plus.nativeUI.actionSheet( {
+					cancel:"取消",
+					buttons:btnArray
+				}, function(e){
+					var index = e.index;
+					var text = "";
+					switch (index){
+						case 0:
+							break;
+						case 1:
+							if(userSelect.innerText != "男")
+							{
+								updateSex = 
+								{
+									reqKey: "editSex",
+									input: {
+										phone: localStorage.getItem("userID"), 
+										sex: 0
+									}
+								};
+								service.OnDoPostServerJson(updateSex, true, false, function(jsonData)
+								{
+									if (jsonData.result == 0)
+									{
+										plus.nativeUI.toast('修改成功');
+										service.SetUserInfo("sex",0);
+										localStorage.setItem("sex",0);
+										
+										userSelect.innerText = '男';
+										ToEditAge("小鲜肉");
+						
+										var userInfo = service.GetUserInfo();
+										
+										if(!userInfo["head"]){
+											var myData = plus.webview.getWebviewById("my.html");
+											if(myData != null){
+												mui.fire(myData, "refurbish");
+											}
+											var opener = plus.webview.getWebviewById("my.html");
+											if(opener != null){
+												mui.fire(opener, "refurbishMy");
+											}
+							                document.getElementById("head-img1").src = service.GetImgSrc("head","defu_man.png");
+										}
+									} 
+									else{
+										plus.nativeUI.toast('修改失败');
+									}
+								});
+							}
+							break;
+						case 2:
+							if(userSelect.innerText != "女")
+							{
+								updateSex = {
+									reqKey: "editSex",
+									input: {
+										phone: localStorage.getItem("userID"), 
+										sex: 1
+									}
+								};
+								service.OnDoPostServerJson(updateSex, true, false, function(jsonData){
+									if (jsonData.result == 0){
+										plus.nativeUI.toast('修改成功');
+										service.SetUserInfo("sex",1);
+										localStorage.setItem("sex",1);
+										userSelect.innerText = '女';
+										ToEditAge("小仙女");
+										
+										var  userInfo = service.GetUserInfo();
+										
+										if(!userInfo["head"]){
+											var myData = plus.webview.getWebviewById("my.html");
+											if(myData != null){
+												mui.fire(myData, "refurbish");
+											}
+											var my = plus.webview.getWebviewById("my.html");
+											if(my != null){
+												mui.fire(my, "refurbishMy");
+											}
+							                document.getElementById("head-img1").src = service.GetImgSrc("head","defu_woman.png");
+										}
+									} else {
+										plus.nativeUI.toast('修改失败');
+									}
+								});
+							}
+							break;
+					}
+				});
+			});
+		};
+		
+		var onUserInfo = function(){
+			var  userInfo = service.GetUserInfo();
+			if (userInfo) {
+				if(userInfo["head"]){
+					document.getElementById("head-img1").src = service.GetImgSrc("head",userInfo["head"])+ "?rnd="+Math.random()+ new Date().getTime();;
+				}else{
+					if(userInfo["sex"] == 0){
+						document.getElementById("head-img1").src = service.GetImgSrc("head","defu_man.png");
+					}else{
+						document.getElementById("head-img1").src = service.GetImgSrc("head","defu_woman.png");
+					}
+				}
+				if(userInfo["nickname"]){
+					document.getElementById("nameResult").innerText = userInfo["nickname"];
+				}
+				if (userInfo["sex"] == 0) {
+					document.getElementById("sexResult").innerText = "男"; 
+				} else if (userInfo["sex"] == 1) {
+					document.getElementById("sexResult").innerText = "女"; 
+				}
+				if(userInfo["age"]){
+					document.getElementById("ageResult").innerText =  userInfo["age"];
+				}
+				if(userInfo["phone"]){
+					document.getElementById("phoneResult").innerText =  userInfo["phone"];
+				}
+				if(userInfo["school"]){
+					document.getElementById("schoolResult").innerText =  userInfo["school"];
+				}
+				
+				if(userInfo["sign"]){
+					if (userInfo["sign"].length > 4) {
+						document.getElementById("signText").innerText =  userInfo["sign"].substr(0,4)+"...";
+					} else{
+						document.getElementById("signText").innerText =  userInfo["sign"];
+					}
+				}
+			}
+		};
+		
+		var reditAge = function(){
+			document.getElementById("ageT").addEventListener('tap', function(event) {
+				var agePicker = new mui.PopPicker();
+				var Result = document.getElementById("ageResult");
+				
+				var  userInfo = service.GetUserInfo();
+				if (userInfo["sex"] == 0) {
+					agePicker.setData([{
+						value: '108',
+						text: '小鲜肉'
+					},{
+						value: '109',
+						text: '花一样的少年'
+					},{
+						value: '112',
+						text: '风一样的男子'
+					},{
+						value: '110',
+						text: '中年大叔'
+					},{
+						value: '111',
+						text: '老爷爷'
+					}]);
+				} else if (userInfo["sex"] == 1) {
+					agePicker.setData([{
+						value: '108',
+						text: '小仙女'
+					},{
+						value: '109',
+						text: '花季少女'
+					},{
+						value: '113',
+						text: '豆蔻年华'
+					},{
+						value: '110',
+						text: '青年大妈'
+					},{
+						value: '111',
+						text: '中年大妈'
+					},{
+						value: '112',
+						text: '老婆婆'
+					}]);
+				}
+				agePicker.show(function(items) {
+					if(Result.innerText != items[0].text){
+						ToEditAge(items[0].text);
+					}
+					//返回 false 可以阻止选择框的关闭
+					//return false;
+				});
+			}, false);
+		};
+		
+		var ToEditAge = function(ageText){
+			var age = {
+				reqKey: "editAge",
+				input: {
+					phone: localStorage.getItem("userID"), 
+					age: ageText
+				}
+			};
+			service.OnDoPostServerJson(age, true, false, function(jsonData){
+				if (jsonData.result == 0){
+					plus.nativeUI.toast("修改成功");
+					document.getElementById("ageResult").innerText = ageText;
+					service.SetUserInfo("age",ageText);
+					
+					var myData = plus.webview.getWebviewById("myData.html");
+					if(myData == null){
+						mui.alert("ID not find!");
+					}else{
+						mui.fire(myData, "refurbish");
+					}
+				} 
+				else 
+				{
+					mui.alert('修改失败', '',function(){});
+				}
+			});
+		};
+		</script>
+</html>

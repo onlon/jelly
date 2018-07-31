@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    
+    <title>订单支付</title>
+    
+    <link href="../css/mui.min.css" rel="stylesheet"/>
+    <link href="../css/jelly-pay-icon.css" rel="stylesheet"/>
+    <style>
+    	html,
+		body {
+			background-color: #efeff4;
+		}
+		
+		.mui-table-view-cell {
+			font-size: 15px;
+			color: #555;
+		}
+		
+		.mui-scroll-wrapper {
+			margin-top: 40px;
+		}
+		
+		#head img {
+			width: 40px;
+			height: 40px;
+		}
+		
+		.mui-table-view {
+			
+		}
+		
+		.mui-table-view-cell {
+			line-height: 20px;
+		}
+		.mui-table-view input.labelauty:checked + label{
+			background-color: #FD843C;
+		}
+		.mui-table-view input.labelauty:checked:not([disabled]) + labelhover{
+			background-color: #FD843C;
+		}
+		.no li:hover{
+			background-color: white;
+		}
+		.sumbitOrder {
+			position: fixed;
+			bottom:0%;
+			width: 100%;
+			background: white;
+			height: 44px;
+			border: 0.5px solid #CCCCCC;
+			z-index: 99;
+		}
+		.mui-scroll{
+			margin-top: 20px;
+		}
+    	.btn-group{
+    		position: fixed;
+    		left: 0;
+    		bottom: 0;
+    		width: 100%;
+    	}
+    	#payBtn{
+    		margin-bottom: 0;
+    	}
+    	.mui-slider{
+    		text-align: center;
+    		padding-top: 150px;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-navbar-inner mui-bar mui-bar-nav">
+		<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00BD00;">
+			<span class="mui-icon mui-icon-left-nav"></span>
+			<font id="backWebName" size="2">发布任务</font>
+		</button>
+		<h1 class="mui-center mui-title">确认任务</h1>
+	</header>
+	<div class="mui-content">
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<h5 class="mui-content-padded" style="margin-left: 15px;">任务详情</h5>
+				<ul class="mui-table-view mui-card">
+					<li class="mui-table-view-cell">
+						<font size="2" color="black" class="mui-pull-left" style="margin-left: 5%;">类别:</font>
+						<font id="category" size="2" color="#54C8E0" class="mui-pull-right" style="position:relative;right: 5%;"></font>
+					</li>
+					<li class="mui-table-view-cell">
+						<font size="2" color="black" class="mui-pull-left" style="margin-left: 5%;">佣金:</font>
+						<font id="reward" size="2" color="#00BD00" class="mui-pull-right" style="position:relative;right: 5%;"></font>
+					</li>
+					<li class="mui-table-view-cell">
+						<font size="2" color="black" class="mui-pull-left" style="margin-left: 5%;">预付:</font>
+						<font id="prepay" size="2" color="#00BD00" class="mui-pull-right" style="position:relative;right: 5%;"></font>
+					</li>
+					<li class="mui-table-view-cell">
+						<font size="2" color="black" class="mui-pull-left" style="margin-left: 5%;">截止日期:</font>
+						<font id="dt" size="2" color="#00BD00" class="mui-pull-right" style="position:relative;right: 5%;"></font>
+					</li>
+					<li class="mui-table-view-cell" style="padding: 15px 40px 15px 40px;">
+						<font id="content" size="2" color="gray" ></font>
+						<br />
+					</li>
+				</ul>
+				<br />
+				<h5 class="mui-content-padded" style="margin-left: 15px;">选择支付方式</h5>
+				<ul class="mui-table-view mui-table-view-radio mui-card" style="height: auto;" id="payList"></ul>
+				<div style="height: 100px;"></div>
+			</div>
+		</div>
+	</div>
+	<div class="sumbitOrder">
+		<font size="3" color="#00BD00" style="position:absolute;bottom: 15%;left: 5%;">￥ </font>
+		<font id="sumMoney" size="3" color="#00BD00" style="position:absolute;bottom: 15%;left: 10%;">0</font>
+		<button id="payBtn" class="mui-btn mui-btn-success mui-btn-primary" style="position:absolute;height: 44px;width:40%;bottom: 0%;right: 0%;">
+			确定发布
+		</button> 
+	</div>
+	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript" src="../js/service.js" ></script>
+	<script src="../js/tools.js"></script>
+	<script src="../js/uuid.js"></script>
+	<script type="text/javascript" charset="UTF-8">
+      	mui.init({
+      		swipeBack: true //启用右滑关闭功能
+      	});
+      	mui('.mui-scroll-wrapper').scroll({indicators: false});//使页面带有滚动且隐藏滚动条
+      	
+      	Date.prototype.Format = function(fmt) 
+		{ //author: meizz 
+		  var o = { 
+		    "M+" : this.getMonth()+1,                 //月份 
+		    "d+" : this.getDate(),                    //日 
+		    "h+" : this.getHours(),                   //小时 
+		    "m+" : this.getMinutes(),                 //分 
+		    "s+" : this.getSeconds(),                 //秒 
+		    "q+" : Math.floor((this.getMonth()+3)/3), //季度 
+		    "S"  : this.getMilliseconds()             //毫秒 
+		  }; 
+		  if(/(y+)/.test(fmt)) 
+		    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+		  for(var k in o) 
+		    if(new RegExp("("+ k +")").test(fmt)) 
+		  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length))); 
+		  return fmt; 
+		}
+      	
+      	var pays={};
+      	var channel = "";
+      	var self = "";
+		var today = new Date().Format("yyyy-MM-dd hh:mm:ss");
+		var paymothod = 1;//默认支付宝支付
+		
+      	mui.plusReady(function(){
+		 	var self = plus.webview.currentWebview();
+		 	OnInitContent();
+	  		getBalance();
+			document.getElementById("sumMoney").textContent = parseFloat(self.reward) + parseFloat(self.prepay);
+//			
+      		document.getElementById("payBtn").addEventListener('tap',function(){
+      			this.setAttribute("disabled","disabled");
+      			if (paymothod == 0) {
+      				var btnArray = ['确定发布','取消'];
+					mui.confirm("确定发布 "+tools.numConvertType(parseInt(self.category))+" 任务？", '提醒', btnArray, function(e) {
+						if (e.index == 0) {
+							toPublish(paymothod,self.category,self.content,self.reward,self.prepay,self.dt,today,localStorage.getItem("userID"));
+						}else{
+							document.getElementById("payBtn").removeAttribute("disabled");
+						}
+					});
+      			} else{
+      				toPublish(paymothod,self.category,self.content,self.reward,self.prepay,self.dt,today,localStorage.getItem("userID"));
+      			}
+      		},false);
+      		
+      		document.querySelector('.mui-table-view.mui-table-view-radio').addEventListener('selected',function(e){
+      			paymothod = parseInt(e.detail.el.id);
+			});
+      	});
+      	
+      	var OnInitContent = function(){
+      		var self = plus.webview.currentWebview();
+      		document.getElementById("category").innerText = tools.numConvertType(parseInt(self.category));
+      		document.getElementById("reward").innerText = "￥ "+self.reward;
+      		document.getElementById("prepay").innerText = "￥ "+self.prepay;
+      		document.getElementById("dt").innerText = self.dt + " 前";
+      		document.getElementById("content").innerText = self.content;
+      	};
+      	var toPublish = function(payType,category,content,reward,prepay,dt,today,publisher){
+			var topublish = {
+				reqKey: "publishTask",
+				input: {
+					task_content:content,
+					reward:reward,
+					publisher:publisher,
+					publish_date:today,
+					task_type:parseInt(category),
+					end_date:dt,
+					prepay:prepay
+				}
+			};
+			//json请求 doserver
+			service.OnDoPostServerJson(topublish, false, false, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					if (payType == 1) {//支付宝支付
+						var money = parseFloat(plus.webview.currentWebview().reward) + parseFloat(plus.webview.currentWebview().prepay);
+						toPay(money,jsonData["ansData"][0]["order_id"],payType);
+					} else if (payType == 0){//余额支付
+						onDonePay(jsonData["ansData"][0]["order_id"],0,payType);
+					}
+				}else{
+					mui.alert("任务发布失败");
+				}
+			}); 
+		};
+	    function plusReady(){
+			// 获取支付通道
+			plus.payment.getChannels(function(channels){
+				var content=document.getElementById('dcontent');
+				var info=document.getElementById("info");
+				var txt="支付通道信息：";
+				for(var i in channels){
+					channel= channels[i];
+					pays[channel.id]=channel;
+					txt += "id:"+channel.id+", ";
+					txt += "description:"+channel.description+", ";
+					txt += "serviceReady:"+channel.serviceReady+";";
+					checkServices(channel);
+				}
+			},function(e){
+//				outLine("获取支付通道失败："+e.message);
+			});
+		}
+		document.addEventListener('plusready',plusReady,false);
+		// 检测是否安装支付服务
+		function checkServices(pc){
+			if(!pc.serviceReady){
+				var txt=null;
+				switch(pc.id){
+					case "alipay":
+					txt="检测到系统未安装“支付宝快捷支付服务”，无法完成支付操作，是否立即安装？";
+					break;
+					default:
+					txt="系统未安装“"+pc.description+"”服务，无法完成支付，是否立即安装？";
+					break;
+				}
+				plus.nativeUI.confirm(txt,function(e){
+					if(e.index==0){
+						pc.installService();
+					}
+				},pc.description);
+			}
+		}
+		var toPay = function(money,orderId,type){
+			var req = {
+				money:money,
+				order_id:orderId,
+				pay_type:type
+			}
+			service.OnDoPostServerJsonToPay(req,function(ret){
+				if(ret){
+					//console.log(ret);
+					if(type == 1){
+						if(pays["alipay"]){
+							plus.payment.request(pays["alipay"],ret,function(result){
+		                        onDonePay(orderId,0,type);
+			                },function(error){
+			                	console.log(error.code);
+			                	if(error.code == -100){
+			                		onDonePay(orderId,1,type);
+			                	}else{
+			                		onDonePay(orderId,1,type);
+			                	}
+			                });
+						}else{
+							console.log('支付宝支付通道不存在');
+						}
+					}
+				}
+			});
+		};
+		
+		var onDonePay  = function(order_id,isFail,tag){
+			var topublish = {
+				reqKey: "DonePay",
+				input: {
+					order_id:order_id,
+					isFail:isFail,//是否支付失败
+					tag:tag //支付方式
+				}
+			};
+			//json请求 doserver
+			service.OnDoPostServerJson(topublish, false, false, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					if (isFail == 1) {
+						plus.nativeUI.toast("支付取消");
+						document.getElementById("payBtn").removeAttribute("disabled");
+					}else{
+						var my = plus.webview.getWebviewById("publish");
+						if(my != null){
+							mui.fire(my, "rubli");
+						}
+						var home = plus.webview.getWebviewById("home.html");
+						if(home != null){
+							mui.fire(home, "ru");
+						}
+						mui.alert("我们的小帮手会尽快找到你哦~\n请积极与她（他）沟通~","发布成功",function(){
+							mui.back();
+						});
+					}
+				}else{
+					mui.alert("订单支付失败");
+				}
+			});
+		};
+		var getBalance = function(){
+			var req = {
+				reqKey:"getBalance",
+				input:{
+					phone:localStorage.getItem("userID")
+				}
+			}
+			service.OnDoPostServerJson(req, true, false, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					getPayList(parseFloat(JSON.parse(jsonData["ansData"][0]["balance"])));
+				}else{
+					mui.alert("获取余额失败，请检查你的网络","",function(){
+						mui.back();
+					});
+					return -1;
+				}
+			});
+		};
+		var getPayList = function(balance){
+			var money = parseFloat(plus.webview.currentWebview().reward) + parseFloat(plus.webview.currentWebview().prepay);
+			if(balance >= money){
+				paymothod = 0;//默认余额支付
+				
+				document.getElementById("payList").innerHTML = "<li class='mui-table-view-cell mui-selected' id='0'>\
+																<a  class='mui-navigate-right'>\
+																<span class='jelly-pay-icon icon-yue mui-pull-left' style='color: #00BD00;margin-left: 3%;font-size: 25px;'></span>\
+																<font size='2' color='black' class='mui-pull-left' style='margin-left: 4%;'>余额</font>\
+																<font size='2' color='black' class='mui-pull-right' style='margin-left: 4%;'>当前余额 "+balance+" 元</font>\
+																</a>\
+																</li>\
+																<li class='mui-table-view-cell' id='1'>\
+																	<a class='mui-navigate-right'>\
+																		<span class='jelly-pay-icon icon-zhifubao mui-pull-left' style='color: #0FA1F2;margin-left: 3%;font-size: 25px;'></span>\
+																		<font size='2' color='black' class='mui-pull-left' style='margin-left: 4%;'>支付宝</font>\
+																	</a>\
+																</li>";
+			}else{
+				document.getElementById("payList").innerHTML = "<li class='mui-table-view-cell mui-selected' id='1'>\
+																	<a class='mui-navigate-right'>\
+																		<span class='jelly-pay-icon icon-zhifubao mui-pull-left' style='color: #0FA1F2;margin-left: 3%;font-size: 25px;'></span>\
+																		<font size='2' color='black' class='mui-pull-left' style='margin-left: 4%;'>支付宝</font>\
+																	</a>\
+																</li>";
+			}
+		};
+    </script>
+</body>
+</html>

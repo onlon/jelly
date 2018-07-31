@@ -1,0 +1,613 @@
+{
+  "index.html": {
+    "resources": [
+      "tab-webview-subpage-home.html",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "home.html",
+      "js/tools.js",
+      "js/service.js",
+      "css/jelly-nav-icon.css",
+      "fonts/jelly-nav.ttf",
+      "css/jelly-my-icon.css",
+      "myTask.html",
+      "css/jelly-header-icon.css",
+      "fonts/jelly-header-icon.ttf"
+    ],
+    "refer": [
+      "tab-webview-subpage-home.html",
+      "tab-webview-subpage-chat.html",
+      "tab-webview-subpage-my.html",
+      "tab-webview-subpage-task.html",
+      "home.html",
+      "my.html",
+      "chat.html",
+      "publish.html",
+      "publish/publish.html",
+      "MyLogin/login.html",
+      "msg.html",
+      "myTask.html",
+      "index_main.html",
+      "page/welcome.html"
+    ]
+  },
+  "tab-webview-subpage-task.html": {
+    "resources": [
+      "images/60x60.gif"
+    ],
+    "refer": []
+  },
+  "tab-webview-subpage-home.html": {
+    "resources": [
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "images/home_task_avatar.jpg",
+      "fonts/mui.ttf",
+      "images/other.png",
+      "images/shopping.png",
+      "images/cloth.png",
+      "images/office.png",
+      "images/all.png",
+      "images/express.png",
+      "images/car.png",
+      "images/desk.png",
+      "images/home_slider1.png",
+      "images/home_slider2.png",
+      "images/task_status.png",
+      "home/task.html"
+    ],
+    "refer": [
+      "home/task.html"
+    ]
+  },
+  "home/task.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "images/home_task_avatar.jpg",
+      "js/tools.js",
+      "js/service.js",
+      "/images/task_status.png",
+      "images/task_status.png",
+      "images/60x60.gif",
+      "fonts/jelly-my-icon.ttf",
+      "css/jelly-my-icon.css",
+      "css/jelly-usericon.css",
+      "fonts/jelly-usericon.ttf"
+    ],
+    "refer": [
+      "MyLogin/login.html",
+      "home.html",
+      "my/myData.html",
+      "home/otherData.html",
+      "home/appeal.html"
+    ]
+  },
+  "home.html": {
+    "resources": [
+      "images/other.png",
+      "images/shopping.png",
+      "images/cloth.png",
+      "images/office.png",
+      "images/express.png",
+      "images/all.png",
+      "images/home_slider1.png",
+      "images/home_task_avatar.jpg",
+      "images/home_slider2.png",
+      "images/car.png",
+      "images/desk.png",
+      "images/task_status.png",
+      "fonts/mui.ttf",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/service.js",
+      "js/tools.js",
+      "css/jelly-my-icon.css",
+      "fonts/jelly-my-icon.ttf",
+      "js/mui.pullToRefresh.js",
+      "js/mui.pullToRefresh.material.js",
+      "images/60x60.gif",
+      "images/zanwu.png",
+      "js/mui.lazyload.js",
+      "js/mui.lazyload.img.js",
+      "images/home-2.jpg",
+      "images/home-1.jpg"
+    ],
+    "refer": [
+      "home/task.html",
+      "PersonalCenter/help.html",
+      "PersonalCenter/step.html"
+    ]
+  },
+  "publish.html": {
+    "resources": [
+      "images/60x60.gif",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "images/home_task_avatar.jpg",
+      "css/mui.min.css",
+      "js/common.js",
+      "js/mui.picker.min.js",
+      "css/mui.picker.min.css",
+      "js/tools.js",
+      "js/service.js",
+      "js/mui.dtpicker.js",
+      "publish.html"
+    ],
+    "refer": [
+      "publish/payment.html",
+      "publish.html"
+    ]
+  },
+  "publish/publish.html": {
+    "resources": [
+      "images/home_task_avatar.jpg"
+    ],
+    "refer": []
+  },
+  "chat.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "images/home_task_avatar.jpg"
+    ],
+    "refer": []
+  },
+  "my.html": {
+    "resources": [
+      "img/2.jpg",
+      "js/common.js",
+      "img/3.jpg",
+      "PersonalCenter/Editdata .html",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "images/background.jpg",
+      "fonts/jelly-nav.ttf",
+      "css/jelly-nav-icon.css",
+      "fonts/jelly-my-icon.ttf",
+      "css/jelly-my-icon.css",
+      "images/60x60.gif",
+      "js/tools.js",
+      "js/service.js",
+      "css/jelly-header-icon.css",
+      "fonts/jelly-header-icon.ttf",
+      "css/jelly-youxiang-icon.css",
+      "css/jelly-my-appeal.css",
+      "fonts/jelly-my-appeal.ttf",
+      "css/jelly-my-youxiang.css",
+      "fonts/jelly-my-youxiang.ttf"
+    ],
+    "refer": [
+      "PersonalCenter/Editdata .html",
+      "PersonalCenter/myMoney.html",
+      "PersonalCenter/help.html",
+      "PersonalCenter/myHelp.html",
+      "PersonalCenter/helpMe.html",
+      "PersonalCenter/feedback.html",
+      "PersonalCenter/Editdata.html",
+      "PersonalCenter/about.html",
+      "MyLogin/login.html",
+      "my/more.html",
+      "my/myData.html",
+      "PersonalCenter/myAppeal.html"
+    ]
+  },
+  "PersonalCenter/myHelp.html": {
+    "resources": [
+      "js/mui.min.js",
+      "img/1.jpg",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/tools.js",
+      "js/service.js",
+      "images/zanwu.png",
+      "fonts/jelly-my-icon.ttf",
+      "css/jelly-my-icon.css"
+    ],
+    "refer": [
+      "home/task.html"
+    ]
+  },
+  "PersonalCenter/help.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "PersonalCenter/Helptheconvention/rules.html",
+      "PersonalCenter/Helptheconvention/xieyi.html",
+      "PersonalCenter/Helptheconvention/gongyue.html",
+      "PersonalCenter/Helptheconvention/question.html"
+    ],
+    "refer": [
+      "PersonalCenter/Helptheconvention/rules.html",
+      "PersonalCenter/Helptheconvention/xieyi.html",
+      "PersonalCenter/Helptheconvention/gongyue.html",
+      "PersonalCenter/Helptheconvention/question.html"
+    ]
+  },
+  "PersonalCenter/helpMe.html": {
+    "resources": [
+      "js/mui.min.js",
+      "img/1.jpg",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/tools.js",
+      "js/service.js",
+      "images/home_task_avatar.jpg",
+      "images/zanwu.png",
+      "css/jelly-my-icon.css",
+      "fonts/jelly-my-icon.ttf"
+    ],
+    "refer": [
+      "home/task.html"
+    ]
+  },
+  "PersonalCenter/myMoney.html": {
+    "resources": [
+      "img/2.jpg",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/tools.js",
+      "js/service.js",
+      "css/jelly-my-icon.css",
+      "fonts/jelly-my-icon.ttf"
+    ],
+    "refer": [
+      "my/tx.html",
+      "my/cz.html"
+    ]
+  },
+  "PersonalCenter/feedback.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/service.js"
+    ],
+    "refer": []
+  },
+  "PersonalCenter/Editdata.html": {
+    "resources": [
+      "js/common.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "img/3.jpg",
+      "PersonalCenter/EditName.html",
+      "PersonalCenter/Introduction.html",
+      "js/tools.js",
+      "js/service.js"
+    ],
+    "refer": [
+      "PersonalCenter/EditName.html",
+      "PersonalCenter/Introduction.html"
+    ]
+  },
+  "PersonalCenter/about.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "PersonalCenter/Helptheconvention/rules.html": {
+    "resources": [
+      "PersonalCenter/help.html"
+    ],
+    "refer": [
+      "PersonalCenter/help.html"
+    ]
+  },
+  "PersonalCenter/EditName.html": {
+    "resources": [
+      "PersonalCenter/Editdata.html"
+    ],
+    "refer": [
+      "PersonalCenter/Editdata.html"
+    ]
+  },
+  "PersonalCenter/Introduction.html": {
+    "resources": [
+      "PersonalCenter/Editdata.html"
+    ],
+    "refer": [
+      "PersonalCenter/Editdata.html"
+    ]
+  },
+  "MyLogin/login.html": {
+    "resources": [
+      "js/tools.js",
+      "js/service.js",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "fonts/mui.ttf",
+      "images/home_task_avatar.jpg",
+      "images/logo-l.png"
+    ],
+    "refer": [
+      "index.html",
+      "MyLogin/zhuce.html",
+      "MyLogin/forgetPWD.html"
+    ]
+  },
+  "MyLogin/zhuce.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/tools.js",
+      "js/service.js",
+      "images/logo-l.png"
+    ],
+    "refer": [
+      "MyLogin/login.html"
+    ]
+  },
+  "MyLogin/forgetPWD.html": {
+    "resources": [
+      "fonts/mui.ttf",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/tools.js",
+      "js/service.js"
+    ],
+    "refer": []
+  },
+  "publish/payment.html": {
+    "resources": [
+      "js/tools.js",
+      "js/service.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/beecloud.js",
+      "js/uuid.js",
+      "css/jelly-pay-icon.css",
+      "fonts/jelly-pay-icon.ttf"
+    ],
+    "refer": []
+  },
+  "msg.html": {
+    "resources": [
+      "images/home_task_avatar.jpg",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/service.js",
+      "js/tools.js",
+      "images/zanwu.png",
+      "css/jelly-header-icon.css",
+      "fonts/jelly-header-icon.ttf"
+    ],
+    "refer": [
+      "home/task.html"
+    ]
+  },
+  "my/more.html": {
+    "resources": [
+      "js/service.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "PersonalCenter/about.html",
+      "PersonalCenter/feedback.html",
+      "my/changePsw.html"
+    ]
+  },
+  "my/changePsw.html": {
+    "resources": [
+      "js/service.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/tools.js"
+    ],
+    "refer": []
+  },
+  "my/myData.html": {
+    "resources": [
+      "js/service.js",
+      "css/jelly-usericon.css",
+      "js/mui.min.js",
+      "fonts/jelly-usericon.ttf",
+      "fonts/mui.ttf",
+      "images/60x60.gif",
+      "css/mui.min.css",
+      "js/mui.zoom.js",
+      "js/mui.previewimage.js"
+    ],
+    "refer": [
+      "my/editMyData/editMyData.html"
+    ]
+  },
+  "my/editMyData/editMyData.html": {
+    "resources": [
+      "js/jquery1.42.min.js",
+      "js/mui.picker.js",
+      "js/mui.poppicker.js",
+      "css/mui.poppicker.css",
+      "css/mui.picker.css",
+      "js/service.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "images/60x60.gif",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "my/editMyData/editName.html"
+    ]
+  },
+  "my/editMyData/editName.html": {
+    "resources": [
+      "js/tools.js",
+      "js/service.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "myTask.html": {
+    "resources": [
+      "js/tools.js",
+      "js/service.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "images/zanwu.png",
+      "js/mui.pullToRefresh.js",
+      "js/mui.pullToRefresh.material.js",
+      "fonts/jelly-my-icon.ttf",
+      "css/jelly-my-icon.css"
+    ],
+    "refer": [
+      "home/task.html"
+    ]
+  },
+  "my/cz.html": {
+    "resources": [
+      "js/uuid.js",
+      "css/jelly-pay-icon.css",
+      "fonts/jelly-pay-icon.ttf"
+    ],
+    "refer": []
+  },
+  "PersonalCenter/Helptheconvention/gongyue.html": {
+    "resources": [
+      "PersonalCenter/help.html"
+    ],
+    "refer": [
+      "PersonalCenter/help.html"
+    ]
+  },
+  "PersonalCenter/Helptheconvention/xieyi.html": {
+    "resources": [
+      "PersonalCenter/help.html"
+    ],
+    "refer": [
+      "PersonalCenter/help.html"
+    ]
+  },
+  "PersonalCenter/Helptheconvention/question.html": {
+    "resources": [
+      "PersonalCenter/help.html"
+    ],
+    "refer": [
+      "PersonalCenter/help.html"
+    ]
+  },
+  "PersonalCenter/step.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "img/5.0.png",
+      "img/7.0.png",
+      "img/3.0.png",
+      "img/8.0.png",
+      "img/1.0.png",
+      "img/2.0.png",
+      "img/6.0.png",
+      "img/4.0.png"
+    ],
+    "refer": [
+      "PersonalCenter/help.html"
+    ]
+  },
+  "index_main.html": {
+    "resources": [
+      "fonts/jelly-nav.ttf",
+      "js/tools.js",
+      "css/jelly-nav-icon.css",
+      "css/jelly-header-icon.css",
+      "css/jelly-my-icon.css",
+      "home.html",
+      "js/service.js",
+      "fonts/jelly-header-icon.ttf",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/wacommon.js"
+    ],
+    "refer": [
+      "home.html",
+      "my.html",
+      "myTask.html",
+      "MyLogin/login.html",
+      "publish.html",
+      "msg.html"
+    ]
+  },
+  "page/welcome.html": {
+    "resources": [
+      "images/lead1.png",
+      "images/lead3.png",
+      "images/lead2.png",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/wacommon.js"
+    ],
+    "refer": [
+      "index_main.html"
+    ]
+  },
+  "home/otherData.html": {
+    "resources": [
+      "js/service.js",
+      "css/jelly-usericon.css",
+      "js/mui.min.js",
+      "fonts/jelly-usericon.ttf",
+      "fonts/mui.ttf",
+      "images/60x60.gif",
+      "css/mui.min.css",
+      "js/mui.zoom.js",
+      "js/mui.previewimage.js"
+    ],
+    "refer": []
+  },
+  "my/tx.html": {
+    "resources": [
+      "js/tools.js",
+      "js/service.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "home/appeal.html": {
+    "resources": [
+      "js/tools.js",
+      "js/service.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "images/add.png",
+      "images/add_img.png",
+      "js/jquery1.42.min.js",
+      "js/mui.picker.js",
+      "js/mui.poppicker.js",
+      "js/uuid.js"
+    ]
+  },
+  "PersonalCenter/myAppeal.html": {
+    "resources": [
+      "js/tools.js",
+      "js/mui.pullToRefresh.js",
+      "css/jelly-my-icon.css",
+      "js/service.js",
+      "js/mui.min.js",
+      "js/mui.pullToRefresh.material.js",
+      "css/mui.min.css",
+      "fonts/mui.ttf",
+      "images/zanwu.png"
+    ]
+  }
+}

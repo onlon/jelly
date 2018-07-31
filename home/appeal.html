@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<title>申诉</title>
+		<style>
+			h5 {
+				margin: 5px 7px;
+			}
+			::-webkit-input-placeholder { 
+				font-size: 14px;
+				color: gray;
+				font-weight: 400;
+				/*color:#0FA1F2;*/ 
+			}
+			#topPopover {
+				position: fixed;
+				top: 16px;
+				right: 6px;
+			}
+			#topPopover .mui-popover-arrow {
+				left: auto;
+				right: 6px;
+			}
+			p {
+				text-indent: 22px;
+			}
+			.mui-popover {
+				height: 135px;
+			}
+			.mui-content {
+				padding: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">申诉</h1>
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00BD00;">
+				<span class="mui-icon mui-icon-left-nav"></span>
+				<font size="2">任务详情</font>
+			</button>
+		</header>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div class="mui-input-row mui-card" style="margin-top: 75px;border: none;">
+						<div style="background: #FFFFFF;margin-bottom: 5px;">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell" style="text-align: center;">
+									<a id="typecontent" href="#topPopover">选择申诉类型</a>
+								</li>
+							</ul>
+						</div>
+						<div style="background: #FFFFFF;">
+							<textarea id="content" rows="7" placeholder="请输入申诉内容" style="border: none;font-size: 15px;margin-bottom: 0;" ></textarea>
+							<div id="imgGroup">
+								<img id="img1" src="" style="height: 60px;"/>
+								<img id="img2" src="" style="height: 60px;"/>
+								<img id="img3" src="" style="height: 60px;"/>
+								<img id="img" src="../images/add_img.png" style="height: 60px;"/>
+							</div>
+						</div>
+						<div style="text-align: center;margin-top: 20px;">
+							<button id="suBtn" style="width: 90%;background-color: #00BD00;border: none;height: 40px;" >
+									<font color="aliceblue">提交</font>
+							</button>
+						</div>
+					</div>
+				</div>
+			</body>
+		</div>
+		<!--右上角弹出菜单-->
+		<div id="topPopover" class="mui-popover">
+			<div class="mui-popover-arrow"></div>
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul id="type" class="mui-table-view" style="text-align: center;">
+						<li class="mui-table-view-cell">
+							<a href="#">接受者未履行要求</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a href="#">发布者未履行要求</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a href="#">其他</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/service.js"></script>
+		<script src="../js/tools.js"></script>
+		<script src="../js/uuid.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/jquery1.42.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			mui('.mui-scroll-wrapper').scroll({indicators: false});//使页面带有滚动且隐藏滚动条
+			var type;
+			var index = 1;
+			mui.plusReady(function(){
+				var typecontent = document.getElementById("typecontent");
+				mui('#type').on('tap','a',function(){
+					typecontent.textContent = this.textContent;
+					type = tools.appealTypeConvertNum(this.textContent);
+					mui('.mui-popover').popover('toggle');
+				});
+				document.getElementById("suBtn").addEventListener("tap",function(){
+					var content = document.getElementById("content").value;
+					var self = plus.webview.currentWebview();
+					if(content == ""|| !type){
+						plus.nativeUI.toast("申诉类型或申诉内容不能为空~");
+					}else{
+//						toAppeal(content,appeal_img1,appeal_img2,appeal_img3,type,self.task.order_id);
+						OnChangeHeadImg(content,type,self.task.order_id);
+					}
+				});
+				var imgBtn = document.getElementById("img");
+				imgBtn.addEventListener('tap', function() {
+					var a = [{
+						title: "拍照"
+					}, {
+						title: "从手机相册选择"
+					}];
+					plus.nativeUI.actionSheet({
+						cancel: "取消",
+						buttons: a
+					}, function(b) {
+						switch (b.index) {
+							case 0:
+								break;
+							case 1:
+								getImage(index++);
+								break;
+							case 2:
+								galleryImg(index++);
+								break;
+							default:
+								break;
+						}
+					});
+				});
+			});
+			
+			var toAppeal = function(appeal_content,appeal_img1,appeal_img2,appeal_img3,appeal_type,order_id){
+				var feedbackInfo = {
+						reqKey: "toAppeal",
+						input: {
+							appeal_phone: localStorage.getItem("userID"),
+							appeal_content: appeal_content,
+							appeal_img1:appeal_img1,
+							appeal_img2:appeal_img2,
+							appeal_img3:appeal_img3,
+							appeal_type:appeal_type,
+							order_id:order_id,
+							appeal_state:1
+						}
+					};
+				service.OnDoPostServerJson(feedbackInfo, true, false, function(jsonData){
+					if (jsonData.result == 0){
+						mui.alert('我们会尽快处理您的申诉~\n请耐心等待~', '提醒', function(){
+							mui.back();
+						});
+					} else {
+						plus.nativeUI.toast("sorry，服务器忙，请稍后再试~~");
+					}
+				})
+			};
+			
+			var verifyImg = null; 
+			//通过摄像头设置图片 
+			function getImage(index) {
+				var c = plus.camera.getCamera();
+				c.captureImage(function(e) {
+					plus.io.resolveLocalFileSystemURL(e, function(entry) {
+						verifyImg = entry.toLocalURL() + "?version=" + new Date().getTime();
+						
+						//加载图片数组
+						uploadPics(verifyImg,index);
+						
+						//变更大图预览的src
+						//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+					   //document.querySelector("#__mui-imageview__group .mui-slider-item img").src = s + "?version=" + new Date().getTime();;;
+					}, function(e) {
+						console.log("读取拍照文件错误：" + e.message);
+					});
+				}, function(s) {
+					console.log("error" + s);
+				}, {
+					filename: "_doc/head.jpg"
+				})
+			}
+	
+			function galleryImg(index) {
+				plus.gallery.pick(function(a) {
+					plus.io.resolveLocalFileSystemURL(a, function(entry) {
+						plus.io.resolveLocalFileSystemURL("_doc/", function(root) {
+							root.getFile("head.jpg", {}, function(file) {
+								//文件已存在
+								file.remove(function() {
+									entry.copyTo(root, 'head.jpg', function(e) {
+											verifyImg = e.fullPath + "?version=" + new Date().getTime();
+											//加载图片数组
+											uploadPics(verifyImg,index);
+											document.getElementById("img"+index).src = verifyImg;
+											//变更大图预览的src
+											//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+											//document.querySelector("#__mui-imageview__group .mui-slider-item img").src = e + "?version=" + new Date().getTime();;
+										},
+										function(e) {
+											console.log('copy image fail:' + e.message);
+										});
+								}, function() {
+									console.log("delete image fail:" + e.message);
+								});
+							}, function() {
+								//文件不存在
+								entry.copyTo(root, 'head.jpg', function(e) {
+										verifyImg = e.fullPath + "?version=" + new Date().getTime();
+										//加载图片数组
+										uploadPics(verifyImg,index);
+										document.getElementById("img"+index).src = verifyImg;
+										//变更大图预览的src
+										//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
+										//document.querySelector("#__mui-imageview__group .mui-slider-item img").src = path;
+									},function(e) {
+										console.log('copy image fail:' + e.message);
+									});
+							});
+						}, function(e) {
+							console.log("get _www folder fail");
+						})
+					}, function(e) {
+						console.log("读取拍照文件错误：" + e.message);
+					});
+				}, function(a) {}, { 
+					filter: "image"
+				})
+			};
+				
+			var f1 = new Array();
+			function uploadPics(url,index) {
+					if(f1[index-1] != null)
+						f1[index-1] = null; 
+					var img = new Image();
+					img.src = url; // 传过来的图片路径在这里用。
+					img.onload = function() {
+						var that = this;
+						//生成比例 
+						var w = that.width,
+							h = that.height,
+							scale = w / h;
+						w = 200; //480  你想压缩到多大，改这里
+						h = 200;
+						//生成canvas
+						var canvas = document.createElement('canvas');
+						var ctx = canvas.getContext('2d');
+						$(canvas).attr({
+							width:w,
+							height:h
+						});
+						ctx.drawImage(that, 0, 0, w, h);
+						var base64 = canvas.toDataURL('image/jpeg', 1 || 0.8); //1最清晰，越低越模糊。有一点不清楚这里明明设置的是jpeg。弹出 base64 开头的一段 data：image/png;却是png。哎开心就好，开心就好
+						
+						f1[index-1] = base64; // 把base64数据丢过去，上传要用。
+						var pic = document.getElementById("img"+index);
+						if(index > 2){
+							document.getElementById("img").style.display = "none";
+						}
+						pic.src = base64; //这里丢到img 的 src 里面就能看到效果了
+					};
+					
+			}; 
+			
+			//上传 ,此处是默认上传，故没有触发事件
+			function OnChangeHeadImg(content,type,order_id)
+			{
+				if(!f1[0]){
+					f1[0] = 0;
+				}
+				if(!f1[1]){
+					f1[1] = 0;	
+				}
+				if(!f1[2]){
+					f1[2] = 0;	
+				}
+				var reqParm = { 
+					reqKey: "toAppeal",
+					input:{
+						phone:localStorage.getItem("userID"),
+						appeal_phone:localStorage.getItem("userID"),
+						appeal_img1:UUIDImg(f1[0]),
+						appeal_img2:UUIDImg(f1[1]),
+						appeal_img3:UUIDImg(f1[2]),
+						appeal_content:content,
+						appeal_type:type,
+						order_id:order_id,
+						appeal_state:1
+					}
+				}
+				service.OnDoPostServerJsonImg(reqParm,f1, true, false, function(jsonData) {
+					if (jsonData.result == 0) {
+						mui.alert("客服会尽快处理~\n请耐心等待~","提交申诉成功",function(){
+							mui.back();
+						});
+					} else {
+						plus.nativeUI.toast("提交申诉失败");
+					}
+				});
+			};
+			
+			function UUIDImg(i){
+				if(i){
+					return new UUID()+".jpg";
+				}else{
+					return null;
+				}
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,16 @@
+@font-face {font-family: "payicon";
+  src: url('../fonts/jelly-pay-icon.ttf') format('truetype');
+}
+
+.jelly-pay-icon {
+  font-family:"payicon" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+.icon-weixin:before { content: "\e600"; }
+.icon-yue:before { content: "\e603"; }
+.icon-zhifubao:before { content: "\e601"; }
+.icon-yinxing:before { content: "\e602"; }

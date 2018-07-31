@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/jelly-my-icon.css">
+		<link rel="stylesheet" href="css/jelly-nav-icon.css">
+		<link rel="stylesheet" href="css/jelly-header-icon.css">
+		<link rel="stylesheet" href="css/jelly-my-youxiang.css">
+		<link rel="stylesheet" href="css/jelly-my-appeal.css">
+		<title></title>
+	</head>
+	<style type="text/css">
+		.gd-set-avatar{
+			text-align: center;
+			padding:32px 10px;
+		}
+				
+		.gd-set-avatar img {
+			border-radius: 50%;
+			height: 60px;
+		}
+		.mui-navigate-right{
+			padding-left: 10px;
+			vertical-align: super;
+		}
+		.noo:after{
+			background-color: #fff;
+		}
+		.noo:before{
+			background-color: #fff;
+		}
+		.no li:hover{
+			background-color: #fff;
+		}
+		.no li:active{
+			background-color: white;
+		}
+		table th:active{
+			background-color: #E8E8E8;
+		} 
+	</style>
+	<body>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					
+					
+					<div style="background-color: #54C8F0;padding-top: 0px;width: 100%;opacity: 1;">  
+						<div class="gd-set-avatar" style="text-align: center;"> 
+							<img id="headImg" src="images/60x60.gif" onclick="MYeditData()"/>
+							</br>
+							<font id="nickname" size="3" color="aliceblue" style="position:relative;top: 9px;"></font>
+						</div>  
+					</div> 
+					<table rules="cols" style="width: 100%;border-color: #F3F3F3;background: white;height: auto;margin-top: 7px;">
+						<tr>
+							<th>
+								<ul class="mui-table-view noo no"> 
+									<li id='myhelped' class='mui-table-view-cell noo' onclick="myHelp()">
+										<font style="color: #555;font-size: 14px;font-weight: 100;">
+											<span class="mui-pull-left mui-icon jelly-header-icon icon-aixin" style="font-size: 22px;color: #FF4D4D;position: relative;left: 15%;"></span>
+											我帮的
+										</font>
+									</li> 
+								</ul>
+							</th>
+							<th>
+								<ul class="mui-table-view noo">
+									<li id='helpme' class='mui-table-view-cell' onclick="helpMe()">
+										<font style="color: black;font-size: 14px;font-weight: 100;">
+											<span class="mui-pull-left mui-icon jelly-header-icon icon-xingxing" style="font-size: 22px;color: #54C8F0;position: relative;left: 15%;"></span>
+											帮我的
+										</font>
+									</li>
+								</ul> 
+							</th>
+						</tr>
+					</table>
+					<div class="mui-slider-group">
+						<ul class="mui-table-view noo" style="margin-top: 7px;height: auto;"> 
+							<li class="mui-table-view-cell" onclick="MYmoney()">
+								<a id="myOrders" class="mui-navigate-right">
+									<span class="mui-icon jelly-header-icon icon-qian" style="color: #54C8F0;font-size: 24px;"></span>
+									<font size="3" color="#555" style="margin-left: 5px;">&nbsp;我的钱包</font>
+								</a>
+							</li>
+							<li class="mui-table-view-cell" onclick="MYeditData()">
+								<a id="mycollection" class="mui-navigate-right">
+									<span class="mui-icon jelly-nav icon-xueshengtiandi" style="color: #FF4D4D;font-size: 24px;"></span>
+									<font size="3" color="#555" style="margin-left: 1px;">&nbsp;我的资料</font>
+								</a>
+							</li>
+							<li class="mui-table-view-cell" onclick="MyAppeal()">
+								<a id="mycollection" class="mui-navigate-right">
+									<span class="mui-icon jelly-my-appeal icon-appeal" style="color: #7F4D4D;font-size: 24px;"></span>
+									<font size="3" color="#555" style="margin-left: 1px;">&nbsp;我的申诉</font>
+								</a>
+							</li>
+						</ul>
+						<ul class="mui-table-view noo" style="margin-top: 7px;height: auto;">
+							<li class="mui-table-view-cell " onclick="MYhelp()">
+								<a id="help" class="mui-navigate-right">
+									<span class="mui-icon jelly-my-icon icon-bangzhu" style="color: #54C8F0;font-size: 27px;"></span>
+									<font size="3" color="#444">&nbsp;帮助与说明</font>
+								</a>
+							</li>
+							<li class="mui-table-view-cell " onclick="toMore()">
+								<a id="setting" class="mui-navigate-right">
+									<span class="mui-icon jelly-my-icon icon-gengduo" style="color: #FF9933;font-size: 25px;"></span>
+									<font size="3" color="#444">&nbsp;更多</font>
+								</a>
+							</li>
+						</ul>
+						<ul class="mui-table-view noo" style="margin-top: 7px;"> 
+							<li id="kefu" class="mui-table-view-cell" >
+								
+								<a href="mailto:cdjelly@163.com">
+									<span class="mui-icon jelly-my-youxiang icon-youxiang" style="color: #00BD00;font-size: 27px;"></span>
+									<font color="#00BD00" style="font-size: 13px;position:relative;left: 3%;bottom: 4px;" >客服邮箱 ：cdjelly@163.com</font>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../js/common.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/service.js"></script>
+		<script src="js/tools.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true, //启用右滑关闭功能
+				preloadPages:[{
+					url:'my/myData.html',
+					id:'myData.html',
+					show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				}]
+			});
+			mui('.mui-scroll-wrapper').scroll({indicators: false});//使页面带有滚动且隐藏滚动条
+			
+			//页面打开时加载函数，只执行一次
+			mui.plusReady(function(){
+				getUserInfo();
+				
+				window.addEventListener("refurbishMy",function(){ 
+					getUserInfo();
+				});
+			});
+			var getUserInfo = function(){
+				if (tools.isLogin() == 1) {
+					
+					var userinfo = service.GetUserInfo(); 
+					document.getElementById("nickname").innerText = "";
+					document.getElementById("nickname").innerText = "Hello "+userinfo["nickname"]+" ~";
+					 
+					if(userinfo["head"]){
+						document.getElementById("headImg").src = service.GetImgSrc("head",userinfo["head"])+ "?rnd="+Math.random()+ new Date().getTime();
+					}else{
+						if(userinfo["sex"] == 0){
+							document.getElementById("headImg").src = service.GetImgSrc("head","defu_man.png");
+						}else{
+							document.getElementById("headImg").src = service.GetImgSrc("head","defu_woman.png");
+						}
+					}
+				} else{
+					setTimeout(getUserInfo,1000);
+				}
+			};
+			
+		
+			function MYmoney(){
+				mui.openWindow({
+					url:'PersonalCenter/myMoney.html',
+					id:'mymoney',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				});
+			}
+			function MYhelp(){
+				mui.openWindow({
+					url:'PersonalCenter/help.html',
+					id:'help',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				});
+			}
+			function MYeditData(){
+				mui.openWindow({
+					url:'my/myData.html',
+					id:'myData.html',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				});
+			}
+			function myHelp(){
+				mui.openWindow({
+					url:'PersonalCenter/myHelp.html',
+					id:'myhelp',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				});
+			}
+			function helpMe(){
+				mui.openWindow({
+					url:'PersonalCenter/helpMe.html',
+					id:'helpme',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				});
+			}
+			function toMore(){
+				mui.openWindow({
+					url:'my/more.html',
+					id:'more',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				});
+			}
+			function MyAppeal(){
+				mui.openWindow({
+					url:'PersonalCenter/myAppeal.html',
+					id:'myappeal',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				});
+			}
+	</script>
+	</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>首页</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/jelly-my-icon.css">
+		<style>
+			.mui-plus-pullrefresh .mui-scroll {
+                position: absolute;
+                width: 100%;
+            }
+			
+			.task-category-item {
+				text-align: center;
+				width: 24%;
+				display: inherit;
+				margin-top: 5px;
+				color: #00BD00;
+			}
+			
+			.task-category-item p {
+				margin-bottom: 0;
+			}
+			
+			
+			.mui-slider .mui-slider-group .mui-slider-item .task-category-item img{
+				padding: 0 20px;
+			}
+			
+			.mui-table-view {
+				background: transparent;
+				margin-top: 5px;
+			}
+			
+			.mui-table-view:after,
+			.mui-table-view:before {
+				background: transparent;
+			}
+			
+			.mui-table-view-cell>a:not(.mui-btn) {
+				white-space: normal;
+			}
+			
+			.mui-table-view-cell {
+				margin-bottom: 5px;
+				background: #fff;
+			}
+			
+			.mui-table-view-cell:after {
+				background: transparent;
+			}
+			
+			.task {
+				border-bottom: 1px solid #eee;
+				padding-bottom: 5px;
+			}
+			
+			.task-head {
+				position: relative;
+			}
+			
+			.task-head-avatar {
+				width: 60px;
+				vertical-align: middle;
+			}
+			
+			.task-head-avatar img {
+				width: 50px;
+				border-radius: 25px;
+			}
+			
+			.task-head-content {
+				width: 100%;
+			}
+			
+			.task-head-name {
+				color: #000000;
+			}
+			
+			.task-head-school {
+				font-size: 12px;
+			}
+			
+			.task-content {
+				width: 100%;
+				padding-right: 20px;
+			}
+			
+			.content {
+				padding-top: 5px;
+			}
+			
+			.task-price {
+				display: inline;
+				font-size: 12px;
+			}
+			
+			.task-time {
+				float: right;
+				font-size: 12px;
+			}
+			
+			.task-status {
+				position: absolute;
+				right: 0;
+				top: 0;
+				width: 80px;
+				float: right;
+				background: #00BD00;
+				border-bottom-left-radius: 35px;
+				height: 30px;
+				text-align: center;
+			}
+			.task-status-text {
+				line-height: 30px;
+				color: #FFFFFF;
+				padding-left: 10px;
+			}
+			.task-category-text{
+				float: right;
+				font-size: 12px;
+			}
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+			}
+			
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+			
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+			
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+			
+			.mui-pull-top-tips .mui-pull-loading {
+				-webkit-backface-visibility: hidden;
+				-webkit-transition-duration: 400ms;
+				transition-duration: 400ms;
+				margin: 0;
+			}
+			
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+			
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+			
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: #efeff4;
+			} 
+			.mui-col-xs-4{
+				position: relative;
+				top:0px;
+			}
+			.mui-slider-indicator .mui-active span{
+				color: #FEA570;
+			}
+			.mui-slider-indicator span{
+				color: #888888;
+			}
+			.mui-pull-top-tips{
+				z-index: 10;
+			}
+			
+			.task-type-active p {
+				margin-bottom: 0;
+				color: #00BD00;
+				font-weight: 100;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div id="slider" class="mui-slider">
+						<div id="bn" class="mui-slider-group mui-slider-loop">
+							<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+							<div class="mui-slider-item mui-slider-item-duplicate">
+								<a href="" id="bn2">
+									<img id="home-2-f" src="images/home-2.jpg">
+								</a>
+							</div>
+							<!-- 第一张 -->
+							<div class="mui-slider-item" >
+								<a href="#" id="bn1">
+									<img id="home-1" src="images/home-1.jpg">
+								</a>
+							</div>
+							<!-- 第二张 -->
+							<div class="mui-slider-item">
+								<a href="#" id="bn2">
+									<img id="home-2" src="images/home-2.jpg">
+								</a>
+							</div>
+							<!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+							<div class="mui-slider-item mui-slider-item-duplicate">
+								<a href="#" id="bn1">
+									<img id="home-1-f" src="images/home-1.jpg">
+								</a>
+							</div>
+						</div>
+						<div class="mui-slider-indicator">
+							<div class="mui-indicator mui-active"></div>
+							<div class="mui-indicator"></div>
+						</div>
+					</div>
+					<div class="mui-slider">
+						<div id="categoryBtnGroup" class="mui-slider-group" style="background: #FFFFFF;">
+							<div class="mui-slider-item" style="background: #FFFFFF;">
+								<span class="mui-icon mui-icon-forward" style="position: absolute;right: 0;top: 0;bottom: 0;display: inline-table;margin: auto;color: #bbb;"></span>
+								<li class="task-category-item task-type-active" data="0">
+									<a href="">
+										<img src="images/all.png" />
+										<p>全部</p>
+									</a>
+								</li>
+								<li class="task-category-item" data="1">
+									<a href="">
+										<img src="images/express.png" />
+										<p>寄取快递</p>
+									</a>
+								</li>
+								<li class="task-category-item" data="2">
+									<a href="">
+										<img src="images/desk.png" />
+										<p>食堂占座</p>
+									</a>
+								</li>
+								<li class="task-category-item" data="3">
+									<a href="">
+										<img src="images/cloth.png" />
+										<p>送取洗衣</p>
+									</a>
+								</li>
+							</div>
+							<div class="mui-slider-item" style="background: #FFFFFF;">
+								<span class="mui-icon mui-icon-back" style="position: absolute;left: 0;top: 0;bottom: 0;display: inline-table;margin: auto;color: #bbb;"></span>
+								<li class="task-category-item" data="4">
+									<a href="">
+										<img src="images/shopping.png" />
+										<p>代购帮买</p>
+									</a>
+								</li>
+								<li class="task-category-item" data="5">
+									<a href="">
+										<img src="images/car.png" />
+										<p>出行拼车</p>
+									</a>
+								</li>
+								<li class="task-category-item" data="6">
+									<a href="">
+										<img src="images/office.png" />
+										<p>办公学习</p>
+									</a>
+								</li>
+								<li class="task-category-item" data="7">
+									<a href="">
+										<img src="images/other.png" />
+										<p>其他</p>
+									</a>
+								</li>
+							</div>
+						</div>
+					</div>
+					<ul id="list" class="mui-table-view mui-table-view-striped mui-table-view-condensed"></ul>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script src="js/service.js"></script>
+	<script src="js/tools.js"></script>
+	<script src="js/mui.pullToRefresh.js"></script>
+	<script src="js/mui.pullToRefresh.material.js"></script>
+	<script src="js/mui.lazyload.js"></script>
+	<script src="js/mui.lazyload.img.js"></script>
+	<script>
+		mui.init();
+		mui('.mui-scroll-wrapper').scroll({indicators: false});
+		
+		var lazyLoadApi = mui('.mui-scroll-wrapper .mui-scroll').imageLazyload({
+            autoDestroy: false,
+            placeholder: 'images/60x60.gif'
+        });
+		
+		var typeActive = function(){
+			mui(".mui-slider-item").on('tap','li',function(){
+				
+				var i = document.querySelector(".mui-slider-item .task-type-active");
+				i.classList.remove('task-type-active');
+				this.classList.add('task-type-active');
+			});
+		};
+		mui.plusReady(function(){
+			
+			typeActive();
+			
+//			document.getElementById("home-1").src = service.GetImgSrc("public","home-1.jpg");
+//			document.getElementById("home-1-f").src = service.GetImgSrc("public","home-1.jpg");
+//			document.getElementById("home-2-f").src = service.GetImgSrc("public","home-2.jpg");
+//			document.getElementById("home-2").src = service.GetImgSrc("public","home-2.jpg");
+			mui('#bn').on('tap','a',function(){
+				if(this.getAttribute('id') == "bn1"){
+					mui.openWindow({
+						url:'./PersonalCenter/step.html',
+						id:'PersonalCenter/step.html',
+					 	show:{
+					      autoShow:true,
+					      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+					      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+					    },
+					    waiting:{
+					      	autoShow:false
+					    },
+						extras:{
+							webBackName:"果冻帮"
+						}
+					});	
+				}
+			});
+			
+			window.addEventListener("ru",function(){
+				getTaskList(0);
+			});
+			
+			getTaskList(0);
+			plus.webview.currentWebview().setStyle({
+				scrollIndicator: 'none'
+			});
+			mui('#categoryBtnGroup').on('tap','li',function(){
+				var h = this.getAttribute('data');
+				getTaskList(h);
+			});
+			// 处理点击事件
+			mui('#list').on('tap','li',function(){
+				var h = this.getAttribute('id');
+				mui.openWindow({
+					url:'home/task.html',
+					id:'home/task.html',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    },
+					extras:{
+						taskid:h,
+						webBackName:"果冻帮"
+					}
+				});
+			});
+		});
+		
+		var getUserInfo = function(phone,i){
+			var getuserinfo = {
+				reqKey: "getUserinfoByPhone",
+				input: {
+					phone:phone
+				}
+			};
+			service.OnDoPostServerJson(getuserinfo, false, false, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					//console.log(JSON.stringify(jsonData["ansData"]));
+					var headImg = "",sex ="";
+					if(jsonData["ansData"][0]["head"]){
+						headImg = service.GetImgSrc("head",jsonData["ansData"][0]["head"]);
+					}else{
+						if(jsonData["ansData"][0]["sex"] == 0){
+							headImg  = service.GetImgSrc("head","defu_man.png");
+						}else{
+							headImg  = service.GetImgSrc("head","defu_woman.png");
+						}
+					}
+					
+					var name = "nickname"+i;
+					var head = "head"+i;
+					var sexN = "sex"+i;
+					document.getElementById(name).textContent = jsonData["ansData"][0]["nickname"]+sex;
+					//document.getElementById(head).setAttribute("data-lazyload",headImg);
+					document.getElementById(head).src = headImg;
+					
+					if(jsonData["ansData"][0]["sex"] == 0){
+						document.getElementById(sexN).className = "jelly-my-icon icon-nanxing";
+						document.getElementById(sexN).style.color = "#54C8E0";
+						sex  = "<span class='jelly-my-icon icon-nanxing' style='font-size: 20px;color: #007AFF;'></span>";
+					}else{
+						document.getElementById(sexN).className = "jelly-my-icon icon-ysxingbienv";
+						document.getElementById(sexN).style.color = "#FF4D4D";
+					}
+				}else{
+					tools.resultError(jsonData.result);
+				}
+			});
+		}
+		var sortBy = function (filed, rev, primer) {
+		    rev = (rev) ? -1 : 1;
+		    return function (a, b) {
+		        a = a[filed];
+		        b = b[filed];
+		        if (typeof (primer) != 'undefined') {
+		            a = primer(a);
+		            b = primer(b);
+		        }
+		        if (a < b) { return rev * -1; }
+		        if (a > b) { return rev * 1; }
+		        return 1;
+		    }
+		};
+		var getTaskList = function(tasktype){
+			var gettasklist = {
+				reqKey: "getTaskByType",
+				input: {
+					task_type:parseInt(tasktype)
+				} 
+			};
+			//json请求 doserver
+			service.OnDoPostServerJson(gettasklist, false, false, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					var table = document.body.querySelector('.mui-table-view');
+					table.innerHTML = "";
+					if(jsonData["ansData"]){
+						jsonData["ansData"].sort(sortBy('publish_date', false, String));
+						for(var i in jsonData["ansData"]){
+							if(jsonData["ansData"][i]["is_frozen"]==0){
+								var li = document.createElement('li');
+								var status = tools.stateConvertType(jsonData["ansData"][i]["task_state"]);
+								var statusColor = tools.stateConvertColor(jsonData["ansData"][i]["task_state"]);
+								jsonData["ansData"][i]["task_type"] = tools.numConvertType(jsonData["ansData"][i]["task_type"]);
+								
+								getUserInfo(jsonData["ansData"][i]["publisher_phone"],i);
+								
+								li.className = 'mui-table-view-cell';
+								li.innerHTML = '<a href=""><div class="task-status" style="background:'+statusColor+';"><p class="task-status-text">'+status+'</p></div><div class="mui-slider-cell task">'+
+									'<div class="task-head mui-table"><div class="task-head-avatar mui-table-cell"><img id="head'+i+'" src="images/60x60.gif"></div>'+
+									'<div class="task-head-content mui-table-cell"><p id="nickname'+i+'" class="task-head-name" style="display:inline;"></p><span id="sex'+i+'" class="jelly-my-icon icon-nanxing" style="font-size: 20px;color: #007AFF;"></span><p class="task-head-school">锦城学院</p>'+
+									'<p class="task-category-text">'+jsonData["ansData"][i]["task_type"]+'</p></div></div></div><div class="mui-slider-cell task content">'+
+									'<div class="task-head mui-table"><div class="task-head-content mui-table-cell"><p class="task-head-name">'+jsonData["ansData"][i]["context"]+'</p>'+
+									'</div></div></div><div class="mui-slider-cell content"><div class="task-head mui-table"><div class="mui-table-cell"><p class="task-price">佣金：￥'+new Number(jsonData["ansData"][i]["reward"]).toFixed(2)+'</p>'+
+									'<p class="task-price" id="dm"> &nbsp;&nbsp;&nbsp;代买预付：￥'+new Number(jsonData["ansData"][i]["prepay"]).toFixed(2)+'</p><p class="task-time">'+new Date(jsonData["ansData"][i]["publish_date"]).Format("MM-dd hh:mm")+'</p></div></div></div></a>';
+								li.setAttribute("id",jsonData["ansData"][i]["order_id"]);
+								//新纪录插到最前面；
+								table.insertBefore(li, table.firstChild); 
+								if(new Number(jsonData["ansData"][i]["prepay"]).toFixed(2) == 0.0){
+									document.getElementById("dm").innerText = "";
+								}
+							}
+						}
+						if(!table.innerHTML){
+							listNoClass("list","快去发布任务吧");
+						}
+						lazyLoadApi.refresh(true);
+					}else{
+						listNoClass("list","快去发布任务吧");
+					}
+				}else{ 
+					tools.resultError(jsonData.result);
+				}
+			});
+		}
+		
+		var listNoClass = function(id,name){
+			tools.StringFormatDemo();
+			document.getElementById(id).innerHTML = "<div class='mui-table-view'>\
+													<div class='mui-table-view-cell' style='text-align: center;background-color: #efeff4;'>\
+														<br />\
+														<br />\
+														<img src='images/zanwu.png' style='width: 80px;opacity:0.4'/>\
+														<br />\
+														<span style='font-size: 14px;color: gray;'>{0}</span>\
+														<br />\
+														<br />\
+													</div>\
+													</div>".format(name);
+		};
+		
+		var slider = mui("#slider");
+		slider.slider({
+			interval: 5000
+		});
+		
+		(function($) {
+			//阻尼系数
+			var deceleration = mui.os.ios ? 0.003 : 0.0009;
+			$('.mui-scroll-wrapper').scroll({
+				bounce: false,
+				indicators: false, //是否显示滚动条
+				deceleration: deceleration
+			});
+			$.ready(function() {
+				$.each(document.querySelectorAll('.mui-content .mui-scroll'), function(index, pullRefreshEl) {
+					$(pullRefreshEl).pullToRefresh({
+						down: {
+							callback: function() {
+								var self = this;
+								setTimeout(function() {
+									var id = self.element.getAttribute("id");
+									document.getElementById("list").innerHTML = "";                                                                                                                                                                                                  
+									getTaskList(0);
+									mui('.mui-scroll-wrapper').scroll({indicators: false});
+									self.endPullDownToRefresh();
+//									imgLazyloadApi.addElements(); //重新获取动态添加的节点加入lazyload
+									//清除，重新加载
+									//document.body.removeAttribute('data-imagelazyload');
+									//	mui(document).imageLazyload({
+									//		placeholder: '../images/60x60.gif' 
+									//	});
+								}, 1000);
+							}
+						},
+						up: {
+						}
+					});
+				});
+			});
+		})(mui);
+		
+		// 对Date的扩展，将 Date 转化为指定格式的String 
+		// 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符， 
+		// 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字) 
+		// 例子： 
+		// (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423 
+		// (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18 
+		Date.prototype.Format = function(fmt) 
+		{ //author: meizz 
+		  var o = { 
+		    "M+" : this.getMonth()+1,                 //月份 
+		    "d+" : this.getDate(),                    //日 
+		    "h+" : this.getHours(),                   //小时 
+		    "m+" : this.getMinutes(),                 //分 
+		    "s+" : this.getSeconds(),                 //秒 
+		    "q+" : Math.floor((this.getMonth()+3)/3), //季度 
+		    "S"  : this.getMilliseconds()             //毫秒 
+		  }; 
+		  if(/(y+)/.test(fmt)) 
+		    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+		  for(var k in o) 
+		    if(new RegExp("("+ k +")").test(fmt)) 
+		  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length))); 
+		  return fmt; 
+		}
+	</script>
+
+</html>

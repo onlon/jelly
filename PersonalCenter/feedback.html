@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<title>意见反馈</title>
+		<style>
+			h5 {
+				margin: 5px 7px;
+			}
+			::-webkit-input-placeholder { 
+				font-size: 14px;
+				color: gray;
+				font-weight: 400;
+				/*color:#0FA1F2;*/ 
+			}
+		</style>
+	</head>
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">意见反馈</h1>
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00BD00;">
+				<span class="mui-icon mui-icon-left-nav"></span>
+				<font size="2">我的</font>
+			</button>
+		</header>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div class="mui-input-row mui-card" style="margin-top: 75px;border: none;">
+						<textarea id="content" rows="7" placeholder="请输入宝贵的建议" style="border: none;font-size: 15px;" ></textarea>
+						<div style="text-align: center;" style="margin-top: 50px;">
+							<button id="suBtn" style="width: 90%;background-color: #00BD00;border: none;height: 40px;" >
+									<font color="aliceblue">提交</font>
+							</button>
+						</div>
+					</div>
+				</div>
+			</body>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/service.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			mui('.mui-scroll-wrapper').scroll({indicators: false});//使页面带有滚动且隐藏滚动条
+			
+			mui.plusReady(function(){
+				
+				
+				document.getElementById("suBtn").addEventListener("tap",function(){
+					var content = document.getElementById("content").value;
+					
+					if(content == ""){
+						plus.nativeUI.toast("反馈内容不能为空~");
+					}else{
+						toFeedBack(content);
+					}
+				});
+			});
+			
+			var toFeedBack = function(tet){
+				var feedbackInfo = {
+						reqKey: "toFeedBack",
+						input: {
+							phone: localStorage.getItem("userID"),
+							info: tet
+						}
+					};
+				service.OnDoPostServerJson(feedbackInfo, true, false, function(jsonData){
+					if (jsonData.result == 0){
+						mui.alert('感谢你十分宝贵的建议~\n我们会更加的努力~', '感谢', function(){
+							mui.back();
+						});
+					} else {
+						plus.nativeUI.toast("sorry，服务器忙，请稍后再试~~");
+					}
+				})
+			};
+		</script>
+	</body>
+</html>

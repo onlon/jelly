@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			.mui-scroll-wrapper{
+				top: 54px;
+			}
+			.mui-table-view{
+				margin-top: 10px;
+			}
+			.mui-table-view-cell{
+				font-size: 15px;
+				color: #666;
+			}
+			.mui-table-view:before{
+				background-color: white;
+			}
+			.mui-table-view:after{
+				background-color: white;
+			}
+		</style>
+		
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00BD00;">
+				<span class="mui-icon mui-icon-left-nav"></span>
+				<font size="2">我的</font>
+			</button>
+			<h1 class="mui-title">更多</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view mui-table-view-chevron">
+						<!--<li class="mui-table-view-cell">
+							消息通知
+							<div class="mui-switch mui-switch-mini mui-switch-mini mui-active">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</li>-->
+
+						<li class="mui-table-view-cell">
+							<a id="changePsd" class="mui-navigate-right">修改密码</a>
+						</li>			
+						<li class="mui-table-view-cell">
+							<a id="clean-sheet" class="mui-navigate-right">清除缓存</a>
+						</li>
+					</ul>
+					<ul class="mui-table-view mui-table-view-chevron">
+						<li class="mui-table-view-cell">
+							<a id="feedback" class="mui-navigate-right">意见反馈</a>
+						</li>
+						<!--<li class="mui-table-view-cell">
+							<a href="#" class="mui-navigate-right">给我评分</a>
+						</li>-->
+					</ul>
+					<ul class="mui-table-view mui-table-view-chevron">
+						<li class="mui-table-view-cell">
+							<a id="about" class="mui-navigate-right">关于<i class="mui-pull-right update" id="versioncurr"></i></a>
+						</li>
+					</ul>
+					<div class="mui-content-padded" style="text-align: center;">
+						<button id="exit" class="mui-btn mui-btn-danger mui-btn-primary" style="height: 40px;width:80%;margin-top: 20px;">
+							退出登录
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/service.js"></script>
+	<script>
+		mui.init({
+			swipeBack:true //启用右滑关闭功能
+		});
+		 //初始化单页的区域滚动
+		mui('.mui-scroll-wrapper').scroll();
+		
+		mui.plusReady(function(){
+			//版本信息
+			var version = document.getElementById('versioncurr');
+			version.innerHTML = "V" + plus.runtime.version; 
+			
+			document.getElementById("exit").addEventListener('tap',function () {
+				var btnArray = ['确定','取消'];
+				mui.confirm("确定退出登录？ ", '提醒', btnArray, function(e) {
+					if (e.index == 0) {
+						localStorage.setItem("isLogin",0);
+						plus.runtime.restart();
+					}
+				});
+			});
+					
+		
+			document.getElementById("clean-sheet").addEventListener('tap',function () {
+			var btnArray = [{title:"确认清理",style:"destructive"}];
+			plus.nativeUI.actionSheet( {
+				cancel:"取消",
+				buttons:btnArray
+			}, function(e){
+					var index = e.index;
+					var text = "";
+					switch (index){
+						case 1:
+							ClearCache();
+							break;
+					}
+				});
+			});
+			
+			//修改密码
+			document.getElementById("changePsd").addEventListener('tap', function() {
+				mui.openWindow({
+					url:'changePsw.html',
+					id:'feedback',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				});
+			});
+			//意见反馈
+			document.getElementById("feedback").addEventListener('tap', function() {
+				mui.openWindow({
+					url:'../PersonalCenter/feedback.html',
+					id:'feedback',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				});
+			});
+			//关于
+			document.getElementById("about").addEventListener('tap', function() {
+				mui.openWindow({
+					url:'../PersonalCenter/about.html',
+					id:'about',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				});
+			});
+		});
+		
+		var ClearCache = function(){
+			var userInfo = localStorage.getItem("userInfo");
+			var head = localStorage.getItem("head");
+			var sex = localStorage.getItem("sex");
+			var userID = localStorage.getItem("userID");
+			
+			plus.cache.clear(function(){
+				plus.nativeUI.toast('清理成功');
+				localStorage.setItem("isLogin", 1);
+				localStorage.setItem("userInfo", userInfo);
+				localStorage.setItem("userID", userID);
+				localStorage.setItem("head", head);
+				localStorage.setItem("sex", sex);
+			});
+		};
+	</script>
+</html>

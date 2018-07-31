@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    
+    <link rel="stylesheet" type="text/css" href="css/mui.picker.min.css"/>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    
+    <style type="text/css">
+    	.mui-table-view-cell{
+    		background: #fff;
+    		margin-bottom: 7px;
+    	}
+    	.mui-table{
+    		margin-bottom: 5px;
+    	}
+    	.mui-table-cell{
+    		vertical-align: top;
+    	}
+    	
+    	.text-xs{
+    		font-size: 12px;
+    	}
+    	.btn-group{
+    		width: 100%;
+    		padding:0 15px;
+    	}
+    	.mui-btn-block{
+    		padding: 10px;	
+    		margin: 0;
+    		border: none;
+    	}
+
+    	#content,#category{
+    		border: none;
+    		margin-bottom: 0;
+    	}
+    	.money{
+    		padding:10px 15px 10px 0;
+    	}
+    	.mui-slider-cell ::-webkit-input-placeholder { 
+			font-size: 18px;
+			color: #999999;
+			font-weight: 400;
+			/*color:#0FA1F2;*/ 
+		}
+    	::-webkit-input-placeholder { 
+			font-size: 13px;
+			color: #999999;
+			font-weight: 400;
+			/*color:#0FA1F2;*/ 
+		}
+		.noo:before{
+			background-color: white;
+		}
+		.noo:after{
+			background-color: white;
+		}
+		.mui-input-row label{
+			width: 30%;
+			padding-right: 0;
+		}
+		.mui-input-row label~input, .mui-input-row label~select, .mui-input-row label~textarea{
+			width: 70%;
+		}
+		.mui-scroll-wrapper{
+			margin-top: 44px;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<button id="back" type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00DB00;">
+			<span class="mui-icon mui-icon-left-nav"></span>
+			<font size="2" id="backWebName">我的任务</font>
+		</button>
+		<h1 class="mui-title">发布任务</h1>
+		<button id="prepayins" class="mui-btn mui-btn-link mui-pull-right" style="color: #00DB00;font-size: 12px;">预付说明</button>
+	</header>
+	<div class="mui-content">
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+			    <div class="mui-table-view-cell">
+			    	<div class="mui-slider-cell">
+			    		<button id="category" ctgr="0" style="color: #00BD00;" class="mui-btn mui-btn-block">选择类别<span class="mui-icon mui-icon-arrowdown"></span></button>
+			    	</div>
+			    </div>
+			    <div class="mui-table-view-cell">
+			    	<div class="mui-slider-cell">
+			    		<textarea id="content" rows="4" placeholder="详细描述你的需求" oninput="value=value.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,'')"></textarea>
+			    	</div>
+			    </div>
+			    <div class="mui-table-view-cell" style="margin-bottom: 0;">
+			    	<div class="mui-input-row">
+			    		<label style="font-size: 15px;">佣金</label>
+			    		<input id="reward" class="money" type="number" placeholder="请输入佣金（元）" oninput="amount(this)"/>
+			    	</div>
+			    </div>
+			    <div class="mui-table-view-cell">
+			    	<div class="mui-input-row">
+			    		<label style="font-size: 15px;">预付</label>
+			    		<input id="prepay" class="prepay" type="number" placeholder="如果需要代购物品请预付（选填）" style="padding:10px 15px 10px 0" oninput="amount(this)" />
+			    	</div>
+			    </div>
+			    <div class="mui-table-view-cell">
+			    	<div class="mui-input-row">
+			    		<label style="font-size: 15px;">完成时间</label>
+			    		<input id="dt" class="money btn" data-options='{"beginYear":2016,"endYear":2016}' placeholder="截止时间" readonly="readonly"/>
+			    	</div>
+			    </div>
+			    <div class="btn-group" style="text-align: center;">
+			    	<button id="publishBtn" class="mui-btn mui-btn-success mui-btn-primary" style="height:45px;width:90%;margin-top: 20px;">
+						下一步
+					</button>
+			    </div>
+	    	</div>
+	    </div>
+	</div>
+	<script src="js/mui.min.js"></script>
+    <script src="js/mui.picker.min.js"></script>
+    <script src="js/service.js"></script>
+    <script src="js/tools.js"></script>
+	<script type="text/javascript" charset="UTF-8">
+		mui.init({
+		swipeBack: true //启用右滑关闭功能
+		});
+		mui('.mui-scroll-wrapper').scroll({indicators: false});//使页面带有滚动且隐藏滚动条
+		
+		
+		var todt = function(dt){
+			var iostime = dt.value.replace(new RegExp("-","gm"),"/");
+			var time1 = new Date(iostime);
+			var time2 = new Date();
+			if(time2 >  time1){
+				plus.nativeUI.toast("填入的时间必须在遥远的未来~");
+				dt.value = "";
+			}else if(parseInt( (time1 - time2) / 1000 / 60 ) < 30){
+				plus.nativeUI.toast("填入的时间至少在30分钟之后的未来 ~ ");
+				dt.value = ""; 
+			}
+		};
+      	(function($) {
+			var dt = $('#dt')[0];
+			var btns = $('.btn');
+			btns.each(function(i, btn) {
+				btn.addEventListener('tap', function() {
+					var optionsJson = this.getAttribute('data-options') || '{}';
+					var options = JSON.parse(optionsJson);
+					var id = this.getAttribute('id');
+					/*
+					 * 首次显示时实例化组件
+					 * 示例为了简洁，将 options 放在了按钮的 dom 上
+					 * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
+					 */
+					var picker = new $.DtPicker(options);
+					picker.show(function(rs) {
+						/*
+						 * rs.value 拼合后的 value
+						 * rs.text 拼合后的 text
+						 * rs.y 年，可以通过 rs.y.vaue 和 rs.y.text 获取值和文本
+						 * rs.m 月，用法同年
+						 * rs.d 日，用法同年
+						 * rs.h 时，用法同年
+						 * rs.i 分（minutes 的第二个字母），用法同年
+						 */
+						dt.value = rs.text;
+						todt(dt);
+						/* 
+						 * 返回 false 可以阻止选择框的关闭
+						 * return false;
+						 */
+						/*
+						 * 释放组件资源，释放后将将不能再操作组件
+						 * 通常情况下，不需要示放组件，new DtPicker(options) 后，可以一直使用。
+						 * 当前示例，因为内容较多，如不进行资原释放，在某些设备上会较慢。
+						 * 所以每次用完便立即调用 dispose 进行释放，下次用时再创建新实例。
+						 */
+						picker.dispose();
+					});
+				}, false);
+			});
+		})(mui);
+			
+		//监听input金额
+		var amount = function(th){
+		    var regStrs = [
+		        ['^0(\\d+)$', '$1'], //禁止录入整数部分两位以上，但首位为0
+		        ['[^\\d\\.]+$', ''], //禁止录入任何非数字和点
+		        ['\\.(\\d?)\\.+', '.$1'], //禁止录入两个以上的点
+		        ['^(\\d+\\.\\d{2}).+', '$1'] //禁止录入小数点后两位以上
+		    ];
+		    for(i=0; i<regStrs.length; i++){
+		        var reg = new RegExp(regStrs[i][0]);
+		        th.value = th.value.replace(reg, regStrs[i][1]);
+		    }
+		}
+			
+		mui.plusReady(function(){
+			
+			window.addEventListener("rubli",function(){
+				document.getElementById("category").innerHTML =  '选择类别<span class="mui-icon mui-icon-arrowdown"></span>';
+				document.getElementById("content").value = "";
+				document.getElementById("reward").value = "";
+				document.getElementById("prepay").value = "";
+				document.getElementById("dt").value = "";
+			});
+			
+			toPay();//下一步按钮监听
+			// 监听类别按钮
+			var category = document.getElementById("category");
+			category.addEventListener('tap',function(){
+				plus.nativeUI.actionSheet( {title:"需求分类",cancel:"取消",buttons:[{title:"寄取快递"},{title:"食堂占座"},{title:"送取洗衣"},{title:"代购帮买"},{title:"出行拼车"},{title:"办公学习"},{title:"其他"}]}, function(e){
+				
+				if(e.index>0){
+					category.setAttribute("ctgr",e.index);
+					category.textContent = tools.numConvertType(e.index);
+					if(e.index==1){
+						plus.nativeUI.toast("请不要泄露重要信息（如取货号），待帮助者与你联系",{
+							verticalAlign:"center"
+						});
+					}
+				}else{
+					category.innerHTML =  '选择类别<span class="mui-icon mui-icon-arrowdown"></span>';
+					category.setAttribute("ctgr",-1);
+				}
+				
+			});
+			},false);
+			
+			document.getElementById("prepayins").addEventListener('tap',function(){
+				var bts=["确认"];
+					plus.nativeUI.confirm("如需代购帮买，请预付预购商品部分定金，线下与帮助者多退少补~",function(e){
+					},"预付说明",bts);
+			},false);
+		});
+			
+		var toPay = function(){
+			//对下一步按钮添加监听事件
+			document.getElementById("publishBtn").addEventListener("tap",function(){
+				var category = document.getElementById("category").getAttribute("ctgr");
+				var content = document.getElementById("content").value;
+				var reward = document.getElementById("reward").value;
+				var prepay = document.getElementById("prepay").value;
+				if(!document.getElementById("prepay").value){
+					prepay = "0";
+				}
+				
+				var dt = document.getElementById("dt").value;
+				
+				var time1 = new Date(dt);
+				var time2 = new Date();
+				if(time2 > time1){
+					plus.nativeUI.toast("填入的时间必须在遥远的未来~");
+				}else if(parseInt( (time1 - time2) / 1000 / 60 ) < 30){
+					plus.nativeUI.toast("填入的时间至少在30分钟之后的未来 ~ ");
+				}else if(reward<1){
+					plus.nativeUI.toast("佣金不能小于1元哟~");
+				}else if(content.length > 200){
+					plus.nativeUI.toast("内容长度不能超过200哦~");
+				}else{
+					if(category>0&&content&&reward&&dt){
+						mui.openWindow({
+							url:"publish/payment.html",
+							id:"payment",
+						 	show:{
+						      autoShow:true,
+						      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+						      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+						    },
+						    waiting:{
+						      	autoShow:false
+						    },
+							extras:{
+						        category:category,
+						        content:content,
+						        reward : reward,
+						        prepay:prepay,
+						        dt:dt
+						    }
+						});
+					}else{
+						plus.nativeUI.toast("请正确填入信息");
+					}
+				}
+			});
+		};
+    </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>登录</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style>
+			input[type="color"], input[type="date"],
+		 	input[type="datetime-local"], input[type="datetime"], 
+		 	input[type="email"], input[type="month"], input[type="number"], input[type="password"], input[type="search"], input[type="tel"], input[type="text"], input[type="time"], input[type="url"], input[type="week"], select, textarea{
+				height: 50px;
+			}
+			::-moz-placeholder { /* Mozilla Firefox 19+ */
+		    		color: rgb(103, 197, 47);
+			}
+			input, select, textarea{
+				font-size: 20px;
+			}
+			.mui-btn-block{
+				margin-top: 50px;
+			}
+			.mui-bar .mui-bar-nav {
+				background-color: white;
+			}
+			/* 通用 */
+			::-webkit-input-placeholder { 
+				font-size: 14px;
+				color: gray;
+				font-weight: 400;
+				/*color:#0FA1F2;*/ 
+			}
+		</style>
+	</head>
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00BD00;">
+				<span class="mui-icon mui-icon-left-nav"></span>
+				<font size="2">果冻帮</font>
+			</button>
+			<h1 class="mui-title">登录</h1>
+		</header>
+		<div class="mui-content" style="padding-left: 30px;padding-right: 30px;">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll" style="text-align: center;">
+					<div class="text" style=" text-align:center;margin-top: 50px;margin-bottom:5px;color: #00Bd00;">
+						<img src="../images/logo-l.png" style="width: 100px;display: "/>
+						<br /><br />
+						<font style="font-size: 20px;">果冻帮</font>
+					</div>
+					<input id="phone" placeholder="请输入电话号码" data-input-password="3" class="mui-input-password" type="text" style="border: 0px;margin-top: 30px;background-color:transparent;font-size: 17px;border-bottom:solid 1px #00Bd00;width: 90%;"/>
+					<input id="password" placeholder="请输入密码" data-input-password="3" class="mui-input-password" type="password" style="border: 0px;margin-top: 0px; background-color: transparent;font-size: 17px;border-bottom:solid 1px #00Bd00;width: 90%;"/>	
+					<div class="clickbutton" style="text-align: center"> 
+						<button id="loginBtn" class="mui-btn mui-btn-success mui-btn-primary" style="height: 40px;width:90%;margin-top: 20px;">
+							登录
+						</button><br /><br />
+						<button id="signIn" class="mui-pull-right" style="background: none;border: none;color: #00Bd00;position: relative;right: 5%;">注册</button>
+						<button id="forgetPwd" class="mui-pull-left" style="background: none;border: none;color: #444;position: relative;left: 4%;" >忘记密码？</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/service.js"></script>
+		<script src="../js/tools.js"></script>
+		<script>
+		mui.init({
+			swipeBack: true //启用右滑关闭功能
+		});
+		mui('.mui-scroll-wrapper').scroll({indicators: false});//使页面带有滚动且隐藏滚动条
+		
+		//页面打开时加载函数，只执行一次
+		mui.plusReady(function(){
+			
+			
+			
+			//对登录按钮点击加监听
+			document.getElementById("loginBtn").addEventListener("tap",function(){
+				var phone = document.getElementById("phone").value;
+				var psw = document.getElementById("password").value;
+				
+				if(!tools.isPhone(phone)){
+					plus.nativeUI.toast("请输入正确的手机号码");
+				}else if(psw == ""){
+					plus.nativeUI.toast("密码不能为空");
+				}else if(psw.length <  6){
+					plus.nativeUI.toast("密码不能少于6位");
+				}else{//开始登录
+					toLogin(phone,psw);
+				}
+			});
+			
+			//注册按钮点击添加监听
+			document.getElementById("signIn").addEventListener('tap',function(){
+				mui.openWindow({
+					url:"zhuce.html",
+					id:"signIn",
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				});
+			},false);
+			
+			//忘记密码按钮点击添加监听
+			document.getElementById("forgetPwd").addEventListener('tap',function(){
+				mui.openWindow({
+					url:"forgetPWD.html",
+					id:"forgetPwd",
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    }
+				});
+			},false);
+		});
+		
+		var toLogin = function(phone,psw){
+			var tologin = {
+				reqKey: "login",
+				input: {
+					phone:phone,
+					psw:psw
+				}
+			};
+			//json请求 doserver
+			service.OnDoPostServerJson(tologin, true, true, function(jsonData){//jsonData即会返回的结果
+				if (jsonData["result"] == 0){
+					SetUserInfo(jsonData["ansData"]);
+					mui.back();
+				} else if(jsonData.result == -3){ 
+					plus.nativeUI.toast("用户名不存在");
+				}else if(jsonData.result == -4){ 
+					plus.nativeUI.toast("密码错误");
+				}else{
+					plus.nativeUI.toast("请求失败,请检查你的网络");
+				}
+			}); 
+		};
+		
+		//将登录用户信息存在本地
+		var SetUserInfo = function(info){
+			var userinfo = JSON.stringify(info);
+			if(userinfo){
+				localStorage.setItem("isLogin", 1);
+				localStorage.setItem("usernameandpsw", {phone:info[0]["phone"],psw:document.getElementById("password").value});
+				localStorage.setItem("userInfo", JSON.stringify(info[0]));
+				localStorage.setItem("userID", info[0]["phone"]);
+				localStorage.setItem("head", info[0]["head"]);
+				localStorage.setItem("sex", info[0]["sex"]);
+				
+				mui.back();
+			}else{
+				plus.nativeUI.toast("未获取到用户信息");
+			}
+		};
+	</script>
+	</body>
+</html>

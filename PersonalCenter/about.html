@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<title></title>
+		<style type="text/css">
+			.my-QQ{
+				float: right;
+			}
+			.mui-table-view-cell{
+				color: gray;
+			}
+		</style>
+	</head>
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">关于我们</h1>
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00BD00;">
+				<span class="mui-icon mui-icon-left-nav"></span>
+				<font size="2">我的</font>
+			</button>
+		</header>
+		<div class="mui-content">
+			<div class="text" style=" text-align:center;margin-top: 50px;color: rgba(103, 197, 47, 1);">
+				<h1><font size="12px">jelly</font></h1>
+			</div>
+			<div style="text-align: center;margin-top: 10px;">
+				<font id="versioncurr">v 1.0.1</font>
+				<div style="text-align: center;padding-left: 50px;padding-right: 50px;padding-top: 10px;">
+					<font color="darkgray" size="3">“果冻帮”是由果冻科技研发的一款同学之间互帮互助，并能获得一定回报的app</font>
+				</div>
+			</div>
+			<ul class="mui-table-view" style="margin-top: 50px;">
+				 <li class="mui-table-view-cell">客服电话<font class="my-QQ"><a href="tel:18408218372">18408218372</a></font></li>
+		         <li class="mui-table-view-cell">客服邮箱<font class="my-QQ"><a href="mailto:cdjelly@163.com">cdjelly@163.com</a></font></li>
+		         <li class="mui-table-view-cell">合作邮箱<font class="my-QQ"><a href="mailto:jellyit@aliyun.com">jellyit@aliyun.com</a></font></li>
+			</ul>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script>
+			mui.init({
+				swipeBack:true //启用右滑关闭功能
+			});
+			 //初始化单页的区域滚动
+			mui('.mui-scroll-wrapper').scroll();
+			
+			mui.plusReady(function(){
+				var version = document.getElementById('versioncurr');
+				version.innerHTML = "V" + plus.runtime.version; 
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link href="../css/mui.min.css" rel="stylesheet"/>
+    <link href="../css/jelly-usericon.css" rel="stylesheet"/>
+    <link href="../css/jelly-my-icon.css" rel="stylesheet"/>
+    <style type="text/css">
+    	.mui-table-view-cell{
+    		background: #fff;
+    	}
+    	.mui-table-cell{
+    		vertical-align: top;
+    	}
+    	.task-avatar{
+    		width: 60px;
+    	}
+    	.task-avatar img{
+    		width: 50px;
+    		border-radius: 50%;
+    	}
+    	.task-time{
+    		font-size: 12px;
+    		float: right;
+    	}
+    	.task-name{
+    		font-size: 12px;
+    	}
+    	.text-xs{
+    		font-size: 12px;
+    	}
+    	.mui-icon{
+    		font-size: 15px;
+    	}
+    	.task-merc{
+    		padding:2px 10px;
+    		background: #00DB00;
+    		position:absolute;
+    		bottom: 0;
+    		right: 0;
+    		color: #fff;
+    		border-radius: 10px 0 0 10px;
+    	}
+    	.btn-group{
+    		width: 100%;
+    		display: flex;
+    		position: fixed;
+    		bottom: 0;
+    	}
+    	.mui-btn-block{
+    		padding: 10px;	
+    		margin: 0;
+    		border: none;
+    		border-left:1px solid #ccc;
+    		border-radius: initial;
+    	}
+    	.mui-btn-primary:enabled:active{
+    		border: none;
+    	}
+    	.mui-col-xs-4,.mui-col-xs-6{
+    		float: left;
+    	}
+    	.mui-table-view:after{
+    		background-color: transparent;
+    	}
+    	.mui-table-view-cell:after{
+    		background-color: transparent;
+    	}
+    	.mui-scroll-wrapper{
+    		margin-top: 44px;
+    	}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <button id="toback" type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00DB00;">
+			<span class="mui-icon mui-icon-left-nav"></span>
+			<font size="2" id="backWebName">返回</font>
+		</button>
+	    <h1 class="mui-title">任务详情</h1>
+	</header>
+	<div class="mui-content">
+		<div class="mui-scroll-wrapper">
+			<div class="mui-scroll">
+			    <div id="publisher" class="mui-table-view-cell">
+			    	<div class="mui-slider-cell">
+			    		<div class="mui-table">
+			    			<div class="mui-table-cell task-avatar">
+			    				<img id="publishAvatar" src="../images/60x60.gif" />
+			    			</div>
+			    			<div class="mui-table-cell">
+			    				<p id="publishDate" class="task-time"></p>
+			    				<p id="publishName" class="task-name" style="display: inline;"></p>
+			    				<span id="sexmark" class='jelly-my-icon icon-nanxing' style='font-size: 20px;color: #007AFF;'></span>
+			    				<p class="text-xs">锦城学院</p>
+			    			</div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <ul class="mui-table-view noo">
+					<li class="mui-table-view-cell">
+						<font size="2" color="black" class="mui-pull-left">佣金:</font>
+						<font style="position:relative; float: right;color: #FF5053;font-size: 12px;">元</font>
+						<font id="publishReward" size="2" color="gray" class="mui-pull-left" style="position:relative;float: right;padding-right: 10px;"></font>
+					</li>
+					<li class="mui-table-view-cell">
+						<font size="2" color="black" class="mui-pull-left">代买预付:</font>
+						<font style="position:relative; float: right;font-size: 12px;color:#FF5053">元</font>
+						<font id="publishPrepay" size="2" color="gray" class="mui-pull-left" style="position:relative;float: right;padding-right: 10px;"></font>
+					</li>
+					<li class="mui-table-view-cell">
+						<font size="2" color="black" class="mui-pull-left">截止时间:</font>
+						<font style="position:relative; float: right;font-size: 12px;color:#FF5053 ;">前</font>
+						<font id="publishEndDate" size="2" color="#FF5053" class="mui-pull-left" style="position:relative;float: right;padding-right: 10px;"></font>
+					</li>
+					<li class="mui-table-view-cell">
+						<font size="2" color="black" class="mui-pull-left">任务详情:</font>
+					</li>
+					<li class="mui-table-view-cell">
+						<font id="publishContent" size="2" color="gray" style="display:block;position:relative;padding-left: 9%;">暂无</font>
+					</li>
+				</ul>
+			    <div id="recipet" class="mui-table-view-cell" style="margin-top: 5px;border: none;">
+			    	<p class="task-merc text-xs">小帮手</p>
+			    	<div class="mui-slider-cell">
+			    		
+			    		<div class="mui-table">
+			    			<div class="mui-table-cell task-avatar">
+			    				<img id="recipetAvatar" src="../images/60x60.gif" />
+			    			</div>
+			    			<div class="mui-table-cell">
+			    				<p id="recdate" class="task-time"></p>
+			    				<p id="recname" class="task-name" style="display: inline;"></p>
+			    				<span id="sexmark2" class='jelly-my-icon icon-nanxing' style='font-size: 20px;color: #007AFF;'></span>
+			    				<!--<p id="recSex"></p>-->
+			    				<p class="text-xs">锦城学院</p>
+			    			</div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div id="ps" style="padding:11px 15px;font-size:12px;color: grey;display: none;"></div>
+		    	<br />
+		    	<a id="appeal" class="mui-pull-right" style="font-size: 14px;padding-right: 25px;padding-top: 10px;text-decoration:underline">申诉?</a>
+		    	<div style="height:100px;"></div>
+			</div>
+		</div>
+	    <div id="btngroup" class="btn-group" style="z-index:99;display: flex;height:auto;">
+	    </div>
+	</div>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/service.js"></script>
+	<script src="../js/tools.js"></script>
+	<script type="text/javascript" charset="UTF-8">
+      	mui.init({
+			swipeBack: true, //启用右滑关闭功能
+			preloadPages:[{
+				id:'../home.html',
+				url:'../home.html'
+			}]
+		});
+		var taskinfo = "";
+		mui('.mui-scroll-wrapper').scroll({indicators: false});//使页面带有滚动且隐藏滚动条
+		
+		//页面打开时加载函数，只执行一次
+      	mui.plusReady(function(){
+      		
+      		var opener = plus.webview.getWebviewById("home.html");
+			if(opener == null){
+				mui.alert("ID not find!");
+			}else{
+				mui.fire(opener, "ru");
+			}
+      		document.getElementById("backWebName").innerText = plus.webview.currentWebview().webBackName;
+      		
+      		//获取首页传输过来的number
+      		var self = plus.webview.currentWebview();
+			var number = self.taskid;
+			if(number){
+				getTaskByNumber(number);
+			}else{
+				plus.nativeUI.actionSheet("任务不存在");
+			}
+			
+			document.getElementById("appeal").addEventListener('tap',function(){
+				mui.openWindow({
+					url:'appeal.html',
+					id:'appeal.html',
+				 	show:{
+				      autoShow:true,
+				      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+				      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+				    },
+				    waiting:{
+				      	autoShow:false
+				    },
+					extras:{
+						task:taskinfo
+					}
+				});
+			},false);
+      	});
+      	
+      	var getTaskByNumber = function(numbers){
+      		var gettaskbynum = {
+      			reqKey:"getTaskByNumber",
+				input:{
+					order_id:numbers
+				}
+      		};
+      		//json请求 doserver
+			service.OnDoPostServerJson(gettaskbynum, true, false, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					taskinfo = jsonData["ansData"][0];
+					if(taskinfo.publisher_phone == localStorage.getItem("userID")){
+						publisherView(taskinfo);
+					}else if(taskinfo.recipet_phone == localStorage.getItem("userID")){
+						accepterView(taskinfo);
+					}else{
+						setAccepterBtn(taskinfo.publisher_phone,taskinfo.recipet_phone,taskinfo.order_id,taskinfo.taskinfo_state);;
+						setPublisher(taskinfo.publisher_phone,taskinfo.context,taskinfo.publish_date,taskinfo.end_date,taskinfo.reward,taskinfo.prepay);
+						document.getElementById("recipet").style.display = "none";
+						//点击头像访问个人资料
+						document.getElementById("publisher").addEventListener("tap",function(){
+							if(taskinfo.publisher_phone){
+								mui.openWindow({
+									url:'otherData.html',
+									id:'otherData.html',
+								 	show:{
+								      autoShow:true,
+								      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+								      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+								    },
+								    waiting:{
+								      	autoShow:false
+								    },
+									extras:{
+										recipet_phone:taskinfo.publisher_phone,
+										webBackName:"task"
+									}
+								});
+							}
+						},false);
+					}
+				}else{ 
+					console.log(jsonData.result);
+					tools.resultError(jsonData.result);
+				}
+			}); 
+      	}
+      	var publisherView = function(task){
+      		setPublisher(task.publisher_phone,task.context,task.publish_date,task.end_date,task.reward,task.prepay);
+      		if(task.task_state==2||task.task_state==4||task.task_state==5){
+  				//已接受状态
+  				getUserInfo(task.recipet_phone,task.accept_date);
+  				setPublisherDoneBtn(task.publisher_phone,task.recipet_phone,task.order_id,task.task_state);	
+      		}else if(task.task_state == 1){
+      			//未接状态可取消任务
+      			document.getElementById("recipet").style.display = "none";
+      			setCancelBtn(task.recipet_phone,task.order_id);
+      		}else{//过期等
+      			document.getElementById("recipet").style.display = "none";
+      			setOneBtn(task.task_state);
+      		}
+      		//点击头像访问个人资料
+//			document.getElementById("publisher").addEventListener("tap",function(){
+//				if(task.publisher_phone == localStorage.getItem("userID")){
+//					mui.openWindow({
+//						url:'../my/myData.html',
+//						id:'../my/myData.html',
+//					 	show:{
+//					      autoShow:true,
+//					      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+//					      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+//					    },
+//					    waiting:{
+//					      	autoShow:false
+//					    },
+//						extras:{
+//							webBackName:"task"
+//						}
+//					});
+//				}
+//			},false);
+			document.getElementById("recipet").addEventListener("tap",function(){
+				if(task.recipet_phone){
+					mui.openWindow({
+						url:'otherData.html',
+						id:'otherData.html',
+					 	show:{
+					      autoShow:true,
+					      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+					      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+					    },
+					    waiting:{
+					      	autoShow:false
+					    },
+						extras:{
+							recipet_phone:task.recipet_phone,
+							webBackName:"task"
+						}
+					});
+				}
+			},false);
+      	}
+      	var accepterView = function(task){
+      		setPublisher(task.publisher_phone,task.context,task.publish_date,task.end_date,task.reward,task.prepay);
+      		if(task.task_state==2||task.task_state==4||task.task_state==5){
+      			//已接受状态
+      			getUserInfo(task.recipet_phone,task.accept_date);
+      			setAccepterDoneBtn(task.publisher_phone,task.recipet_phone,task.order_id,task.task_state);
+      		}else{
+      			getUserInfo(task.recipet_phone,task.accept_date);
+      		}
+      		//点击头像访问个人资料
+//			document.getElementById("recipet").addEventListener("tap",function(){
+//				if(task.recipet_phone == localStorage.getItem("userID")){
+//					mui.openWindow({
+//						url:'../my/myData.html',
+//						id:'../my/myData.html',
+//					 	show:{
+//					      autoShow:true,
+//					      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+//					      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+//					    },
+//					    waiting:{
+//					      	autoShow:false
+//					    },
+//						extras:{
+//							webBackName:"task"
+//						}
+//					});
+//				}
+//			},false);
+			document.getElementById("publisher").addEventListener("tap",function(){
+				if(task.publisher_phone){
+					mui.openWindow({
+						url:'otherData.html',
+						id:'otherData.html',
+					 	show:{
+					      autoShow:true,
+					      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+					      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+					    },
+					    waiting:{
+					      	autoShow:false
+					    },
+						extras:{
+							recipet_phone:task.publisher_phone,
+							webBackName:"task"
+						}
+					});
+				}
+			},false);
+      	}
+      	var setCancelBtn = function(recPhone,order_id){
+      		var btngroup = document.getElementById("btngroup");
+      		btngroup.innerHTML = "<div class='mui-col-xs-12'>\
+						    	<button id='pubCancelBtn' class='mui-btn mui-btn-block mui-btn-primary' style='background:#FF5053;font-size: 14px;'>取消任务</button>\
+						    	</div>";
+			var pubCancelBtn = document.getElementById("pubCancelBtn");
+			
+			var recacceptbtn = pubCancelBtn.addEventListener('tap',function(){
+				if(tools.isLogin() == "0"){
+					isLoginMsg();
+				}else{
+					if(recPhone){
+						var bts=["确认","取消"];
+						plus.nativeUI.confirm("任务已经被人接啦，确认要取消？\n小帮手提醒你:如果离接受时间超过20分钟，我们将扣除佣金的20%补偿于接收者，望理解~",function(e){
+							if(e.index == 0){
+								acceptCancel(order_id,recPhone);
+							}else{}
+						},"提醒",bts);
+					}else{
+						var bts=["确认","取消"];
+						plus.nativeUI.confirm("确认取消任务？",function(e){
+							if(e.index == 0){
+								acceptCancel(order_id,recPhone);
+							}else{}
+						},"提醒",bts);
+					}
+				}
+			},false);
+      	};
+      	var setOneBtn = function(state){
+      		var btngroup = document.getElementById("btngroup");
+      		switch (state){
+      			case 3://任务已取消
+      				btngroup.innerHTML = "<div class='mui-col-xs-12'>\
+									    	<button class='mui-btn mui-btn-block mui-btn-primary' style='background:#FF5053;font-size: 14px;' disabled='disabled'>任务已取消</button>\
+								    	</div>";
+      				break;
+      			case 7://任务已过期
+      				btngroup.innerHTML = "<div class='mui-col-xs-12'>\
+									    	<button class='mui-btn mui-btn-block mui-btn-primary' style='background:#FF5053;font-size: 14px;' disabled='disabled'>任务已过期</button>\
+								    	</div>";
+      				break;
+      			default:
+      				break;
+      		}
+      	}
+      	
+      	var setPublisherDoneBtn = function(pubPhone,recPhone,order_id,state){
+      		var btngroup = document.getElementById("btngroup");
+      		btngroup.innerHTML = "<div style='width: 40%;float: left;'>\
+	    						<button id='pubst2phone' class='mui-btn mui-btn-block' style='font-size: 14px;height:55px;'><span class='jelly-user-icon icon-shouji' style='color: #54C8F0;font-size: 22px;height:auto;'><font size='2' color='gray' style='margin-left: 10px;'>联系对方</font></span></button>\
+	    						</div>\
+	    						<div style='width: 30%;float: left;'>\
+	    						<button id='pubst2cancel' class='mui-btn mui-btn-block mui-btn-success' style='font-size: 13px;height:55px;background:#FF5053;'>取消任务</button>\
+	    						</div>\
+	    						<div style='width: 30%;float: left;'>\
+	    						<button id='pubst2done' class='mui-btn mui-btn-block mui-btn-success' style='font-size: 13px;height:55px;'>确认任务</button>\
+	    						</div>";
+	    	var pubdonebtn =  document.getElementById("pubst2done");
+	    	var pubcancelbtn =  document.getElementById("pubst2cancel");
+	    	var ps = document.getElementById("ps");
+			if(state == 2){
+				pubdonebtn.setAttribute("disabled","disabled");
+				pubdonebtn.innerHTML = "等待对方确认";
+				ps.style.display = "inherit";
+				ps.innerText = "你的任务已被帮忙者接受~\n小帮手提醒你：当你的任务被人接受后，如果你需要取消任务，并且离接收者接受时间超过20分钟，取消将扣除佣金的20%补偿于接收者，望理解~";
+			}else if(state == 4){
+				pubcancelbtn.setAttribute("disabled","disabled");
+				ps.style.display = "inherit";
+				ps.innerText = "小帮手提醒你：你的任务已被完成啦~\n请在24小时内确认任务或有问题联系客服处理（客服邮箱：cdjelly@163.com）~";
+			}else if(state == 5){
+				pubdonebtn.setAttribute("disabled","disabled");
+				pubcancelbtn.setAttribute("disabled","disabled");
+				pubdonebtn.innerHTML = "已完成";
+			}
+			
+			document.getElementById("pubst2phone").addEventListener('tap',function(){
+				if(tools.isLogin() == "0"){
+					isLoginMsg();
+				}else{
+					var btnArray = ['取消', '拨打'];
+					mui.confirm('拨打对方电话？', '电话', btnArray, function(e) {
+						if (e.index == 1) {
+							plus.device.dial(recPhone, true );
+						}
+					});
+				}
+			},false);
+			if(state != 2){
+				pubdonebtn.addEventListener('tap',function(){
+					if(tools.isLogin() == "0"){
+						isLoginMsg();
+					}else{
+						var bts=["确认","取消"];
+						plus.nativeUI.confirm("确认对方已完成任务？\n小帮手提醒你：确认即任务完成，你的佣金将打入接收者钱包哦~",function(e){
+							if(e.index == 0){
+								publishDone(order_id,recPhone);
+							}else{}
+						},"提醒",bts);
+					}
+				},false);
+			}
+			if(state == 2){
+				if(recPhone){
+					pubcancelbtn.addEventListener('tap',function(){
+						if(tools.isLogin() == "0"){
+							isLoginMsg();
+						}else{
+							var bts=["确认","取消"];
+							plus.nativeUI.confirm("任务已经被人接啦，确认要取消？\n小帮手提醒你:如果离接受时间超过20分钟，我们将扣除佣金的20%补偿于接收者，望理解~",function(e){
+								if(e.index == 0){
+									acceptCancel(order_id,recPhone);
+								}else{}
+							},"提醒",bts);
+						}
+					},false);
+				}else{
+					pubcancelbtn.addEventListener('tap',function(){
+						if(tools.isLogin() == "0"){
+							isLoginMsg();
+						}else{
+							var bts=["确认","取消"];
+							plus.nativeUI.confirm("确认取消任务？",function(e){
+								if(e.index == 0){
+									acceptCancel(order_id,recPhone);
+								}else{}
+							},"提醒",bts);
+						}
+					},false);
+				}
+			}
+      	}
+      	var setAccepterBtn = function(pubPhone,recPhone,order_id,state){
+      		var btngroup = document.getElementById("btngroup");
+      		btngroup.innerHTML = "<div class='mui-col-xs-12'>\
+						    	<button id='recst1accept' class='mui-btn mui-btn-block mui-btn-primary' style='background:#00DB00;font-size: 14px;'>接受任务</button>\
+						    	</div>";
+			document.getElementById("recst1accept").addEventListener('tap',function(){
+				if(tools.isLogin() == "0"){
+					isLoginMsg();
+				}else{
+					var bts=["确认","取消"];
+					plus.nativeUI.confirm("确认接收任务？\n小帮手提醒你:一旦接受任务，无法主动取消哦~",function(e){
+						if(e.index == 0){
+							getAccept(order_id,localStorage.getItem("userID"),pubPhone);
+						}else{}
+					},"提醒",bts);
+				}
+			},false);
+      	}
+      	var setAccepterDoneBtn = function(pubPhone,recPhone,order_id,state){
+      		var btngroup = document.getElementById("btngroup");
+      		btngroup.innerHTML = "<div style='width: 60%;float:left'>\
+						    	<button id='recst2phone' class='mui-btn mui-btn-block' style='font-size: 14px;height:55px;'><span class='jelly-user-icon icon-shouji' style='color: #54C8F0;font-size: 22px;height:auto;'><font size='2' color='gray' style='margin-left: 10px;'>联系对方</font></span></button>\
+						    	</div>\
+						    	<div style='width: 40%;float:left;'>\
+						    	<button id='recst2done' class='mui-btn mui-btn-block mui-btn-success' style='font-size: 13px;height:55px;'>确认任务</button>\
+						    	</div>";
+			var recdonebtn = document.getElementById("recst2done");
+			var ps = document.getElementById("ps");
+			if(state == 4){
+				recdonebtn.textContent = "等待对方确认";
+				recdonebtn.setAttribute("disabled","disabled");
+				ps.style.display = "inherit";
+				ps.innerText = "PS:请联系对方尽快确认任务~\n如果已完成任务对方拒绝确认请联系客服处理~";
+			}else if(state == 5){
+				recdonebtn.textContent = "已完成";
+				recdonebtn.setAttribute("disabled","disabled");
+			}else if(state > 5){
+				recdonebtn.textContent = "已失效";
+				recdonebtn.setAttribute("disabled","disabled");
+			}else{
+				ps.style.display = "inherit";
+				ps.innerText = "PS:请在截止时间前完成任务并点击确认~\n否则任务将自动失效~";
+			}
+			document.getElementById("recst2phone").addEventListener('tap', function() {
+				if(tools.isLogin() == "0"){
+					isLoginMsg();
+				}else{
+					var btnArray = ['取消', '拨打'];
+					mui.confirm('拨打对方电话？', '电话', btnArray, function(e) {
+						if (e.index == 1) {
+							plus.device.dial(pubPhone, true );
+						}
+					});
+				}
+			},false);
+			recdonebtn.addEventListener('tap',function(){
+				if(tools.isLogin() == "0"){
+					isLoginMsg();
+				}else{
+					var bts=["确认","取消"];
+					plus.nativeUI.confirm("已经完成任务？",function(e){
+						if(e.index == 0){
+							acceptDone(order_id,pubPhone);
+						}else{}
+					},"提醒",bts);
+				}
+			},false);
+      	}
+      	var setPublisher = function(phone,context,publish_date,end_date,reward,prepay){
+			var getuserinfo = {
+				reqKey: "getUserinfoByPhone",
+				input: {
+					phone:phone
+				}
+			};
+			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					var headImg = "",sex=jsonData["ansData"][0]["sex"];
+					if(jsonData["ansData"][0]["head"]){
+						headImg = service.GetImgSrc("head",phone+".jpg");
+					}else{
+						if(jsonData["ansData"][0]["sex"] == 0){
+							headImg  = service.GetImgSrc("head","defu_man.png");
+						}else{
+							headImg  = service.GetImgSrc("head","defu_woman.png");
+						}
+					}
+					if(sex == 0){
+						var s = document.getElementById("sexmark");
+						s.className = "jelly-my-icon icon-nanxing";
+						s.style.color = "#54C8E0";
+					}else{
+						var s = document.getElementById("sexmark");
+						s.className = "jelly-my-icon icon-ysxingbienv";
+						s.style.color = "#FF4D4D";
+					}
+					document.getElementById("publishName").textContent = jsonData["ansData"][0]["nickname"];
+					document.getElementById("publishAvatar").src = headImg;
+//					document.getElementById("recSex").textContent = tools.ConvertSex(jsonData["ansData"][0]["sex"]);
+					
+				}else{
+					tools.resultError(jsonData.result);
+				}
+			});
+			document.getElementById("publishContent").innerHTML = context;
+			end_date = end_date.replace(new RegExp("-","gm"),"/");
+			end_date = end_date.replace(new RegExp("T","gm")," ");
+			end_date = end_date.replace(new RegExp("Z","gm"),"");
+			publish_date = publish_date.replace(new RegExp("-","gm"),"/");
+			publish_date = publish_date.replace(new RegExp("T","gm")," ");
+			publish_date = publish_date.replace(new RegExp("Z","gm"),"");
+			var pubarr = publish_date.split(':');
+			publish_date = pubarr[0] + ":" + pubarr[1];
+			document.getElementById("publishDate").textContent = new Date(publish_date).Format("MM-dd hh:mm");
+			document.getElementById("publishEndDate").textContent = new Date(end_date).Format("MM-dd hh:mm");
+			document.getElementById("publishReward").textContent = '¥'+new Number(reward).toFixed(2);
+			document.getElementById("publishPrepay").textContent = '¥'+new Number(prepay).toFixed(2);
+//			document.getElementById("publishSex").textContent = tools.ConvertSex(sex);
+      	}
+      	
+		var getUserInfo = function(phone,date){
+			var getuserinfo = {
+				reqKey: "getUserinfoByPhone",
+				input: {
+					phone:phone
+				}
+			};
+			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					var headImg = "",sex=jsonData["ansData"][0]["sex"];
+					if(jsonData["ansData"][0]["head"]){
+						headImg = service.GetImgSrc("head",phone+".jpg");
+					}else{
+						if(jsonData["ansData"][0]["sex"] == 0){
+							headImg  = service.GetImgSrc("head","defu_man.png");
+						}else{
+							headImg  = service.GetImgSrc("head","defu_woman.png");
+						}
+					}
+					if(sex == 0){
+						var s = document.getElementById("sexmark2");
+						s.className = "jelly-my-icon icon-nanxing";
+						s.style.color = "#54C8E0";
+					}else{
+						var s = document.getElementById("sexmark2");
+						s.className = "jelly-my-icon icon-ysxingbienv";
+						s.style.color = "#FF4D4D";
+					}
+					document.getElementById("recname").textContent = jsonData["ansData"][0]["nickname"];
+					document.getElementById("recipetAvatar").src = headImg;
+//					document.getElementById("recSex").textContent = tools.ConvertSex(jsonData["ansData"][0]["sex"]);
+					date = date.replace(new RegExp("-","gm"),"/");
+					date = date.replace(new RegExp("T","gm")," ");
+					date = date.replace(new RegExp("Z","gm"),"");
+					var pubarr = date.split(':');
+					date = pubarr[0] + ":" + pubarr[1];
+					document.getElementById("recdate").textContent = new Date(date).Format("MM-dd hh:mm");
+				}else{
+					tools.resultError(jsonData.result);
+				}
+			});
+		}
+		
+		var getAccept = function(order_id,phone,receiver){
+			var getuserinfo = {
+				reqKey: "acceptTask",
+				input: {
+					order_id:order_id,
+					accepter_phone:phone
+				}
+			};
+			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					var mr = plus.webview.getWebviewById("home.html");
+					if (mr !=null){ 
+						mui.fire(mr, "ru");
+					}
+					mui.alert("请速与发布人联系且在截止日期前完成任务~","接收任务成功",function(){
+						mui.back();
+					});
+//					plus.nativeUI.alert("接收任务成功",function(e){
+//						var i=e.index;
+//						if(i<0){
+//							
+//						}else{
+//							mui.back();	
+//						}
+//					},"提醒","好");
+					var getuserinfo = {
+						reqKey: "getUserinfoByPhone",
+						input: {
+							phone:localStorage.getItem("userID")
+						}
+					};
+					service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
+						if (jsonData.result == 0){
+							var msg = jsonData["ansData"][0]["nickname"]+"接受了你的任务，快去看看吧！";
+							sendMsg(msg,localStorage.getItem("userID"),receiver,order_id);
+						}else{ 
+							tools.resultError(jsonData.result);
+						}
+					});
+				}else{ 
+					tools.resultError(jsonData.result);
+				}
+			});
+		}
+		
+		var acceptDone = function(order_id,receiver){
+			var getuserinfo = {
+				reqKey: "reDoneTask",
+				input: {
+					order_id:order_id
+				}
+			};
+			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					var mr = plus.webview.getWebviewById("myTask.html");
+					if (mr !=null){
+						mui.fire(mr, "back");
+					}
+					plus.nativeUI.alert("请耐心等待发布者确认~",function(e){
+						var i=e.index;
+						if(i<0){
+							mui.back();
+						}else{
+							mui.back();	
+						}
+					},"已确认完成任务","好");
+					var getuserinfo = {
+						reqKey: "getUserinfoByPhone",
+						input: {
+							phone:localStorage.getItem("userID")
+						}
+					};
+					service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
+						if (jsonData.result == 0){
+							var msg = jsonData["ansData"][0]["nickname"]+"完成了你的任务，快去看看吧！~";
+							sendMsg(msg,localStorage.getItem("userID"),receiver,order_id);
+						}else{ 
+							tools.resultError(jsonData.result);
+						}
+					});
+				}else{ 
+					tools.resultError(jsonData.result);
+				}
+			});
+		}
+		
+		var publishDone = function(order_id,receiver){
+			var getuserinfo = {
+				reqKey: "puDoneTask",
+				input: {
+					order_id:order_id
+				}
+			};
+			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					var mr = plus.webview.getWebviewById("myTask.html");
+					if (mr !=null){
+						mui.fire(mr, "back");
+					}
+					plus.nativeUI.alert("已确认",function(e){
+						var i=e.index;
+						if(i<0){
+							mui.back();
+						}else{
+							mui.back();	
+						}
+					},"提醒","好");
+					var getuserinfo = {
+						reqKey: "getUserinfoByPhone",
+						input: {
+							phone:localStorage.getItem("userID")
+						}
+					};
+					service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
+						if (jsonData.result == 0){
+							var msg = jsonData["ansData"][0]["nickname"]+"确认了你做的任务，快去看看吧！";
+							sendMsg(msg,localStorage.getItem("userID"),receiver,order_id);
+						}else{ 
+							tools.resultError(jsonData.result);
+						}
+					});
+				}else{ 
+					tools.resultError(jsonData.result);
+				}
+			});
+		}
+		
+		var acceptCancel = function(order_id,receiver){
+			var getuserinfo = {
+				reqKey: "cancelTask",
+				input: {
+					order_id:order_id
+				}
+			};
+			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					var mr = plus.webview.getWebviewById("myTask.html");
+					if (mr !=null){ 
+						mui.fire(mr, "back");
+					}
+					plus.nativeUI.alert("取消任务成功",function(e){
+						var i=e.index;
+						if(i<0){
+							mui.back();
+						}else{
+							mui.back();	
+						}
+					},"提醒","好");
+					var getuserinfo = {
+						reqKey: "getUserinfoByPhone",
+						input: {
+							phone:localStorage.getItem("userID")
+						}
+					};
+					service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
+						if (jsonData.result == 0){
+							if(receiver){
+								var msg = jsonData["ansData"][0]["nickname"]+"取消了任务，快去看看吧！\n小帮手提醒你：如果任务已被接受并且离接受时间已超过20分钟，将扣除佣金的20%补偿于你~";
+								sendMsg(msg,localStorage.getItem("userID"),receiver,order_id);
+							}
+						}else{ 
+							tools.resultError(jsonData.result);
+						}
+					});
+				}else{ 
+					tools.resultError(jsonData.result);
+				}
+			});
+		}
+		
+		var sendMsg = function(msg_content,sender,receiver,order_id){
+			var getuserinfo = {
+				reqKey: "toAddMsg",
+				input: {
+					msg_content:msg_content,
+					sender:sender,
+					receiver:receiver,
+					send_time:new Date().Format("yyyy-MM-dd hh:mm:ss"),
+					order_id:order_id
+				}
+			};
+			service.OnDoPostServerJson(getuserinfo, true, true, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+
+				}else{ 
+					tools.resultError(jsonData.result);
+				}
+			});
+		}
+		
+		Date.prototype.Format = function(fmt)   
+		{ //author: meizz   
+		  var o = {   
+		    "M+" : this.getMonth()+1,                 //月份   
+		    "d+" : this.getDate(),                    //日   
+		    "h+" : this.getHours(),                   //小时   
+		    "m+" : this.getMinutes(),                 //分   
+		    "s+" : this.getSeconds(),                 //秒   
+		    "q+" : Math.floor((this.getMonth()+3)/3), //季度   
+		    "S"  : this.getMilliseconds()             //毫秒   
+		  };   
+		  if(/(y+)/.test(fmt))   
+		    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+		  for(var k in o)   
+		    if(new RegExp("("+ k +")").test(fmt))   
+		  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+		  return fmt;   
+		} 
+		
+		var isLoginMsg = function(){
+			var btnArray = ['等一会儿', '去登陆'];
+				mui.confirm('请先登陆', '你还未登陆', btnArray, function(e) {
+					if (e.index == 1) {
+						mui.openWindow({
+							url: "../MyLogin/login.html",
+							id: "login",
+						 	show:{
+						      autoShow:true,
+						      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+						      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+						    },
+						    waiting:{
+						      	autoShow:false
+						    }
+						});
+					}
+				});
+		}
+    </script>
+</body>
+</html>

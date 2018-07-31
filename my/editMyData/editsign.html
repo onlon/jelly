@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>个性签名修改</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00bd00;">
+					<span class="mui-icon mui-icon-left-nav"></span>
+					<font size="2">编辑</font>
+				</button>
+				<h1 class="mui-center mui-title">个性签名修改</h1>
+		</header>
+			<div class="mui-content">
+				<div class="mui-input-row" style="margin: 6% 3%;">
+					<textarea id="sign" rows="7" style="font-size: 14px;border: none;" placeholder="请输入个性签名"></textarea>
+				</div>
+			
+				<div style="text-align: center;margin-top: 10px;">
+					<button id="update" style="width: 90%;background-color: #00bd00;
+						border: none;height: 40px;">
+						<font color="aliceblue">保存</font>
+					</button>
+				</div>
+			</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/service.js"></script>
+		<script>
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			
+			mui.plusReady(function(){
+				var signInfo = document.getElementById("sign");
+				var userInfo = service.GetUserInfo();
+				
+				signInfo.value = userInfo["sign"];
+				
+				
+				document.getElementById("update").addEventListener("tap", function(){
+					if(signInfo.value.length > 250){
+						plus.nativeUI.toast("最多输入250个字哦~");
+					}
+					else if(signInfo.value != userInfo["sign"]){
+						var updateSignInfo = {
+							reqKey: "editSign",
+							input: {
+								phone: localStorage.getItem("userID"), 
+								sign: signInfo.value
+							}
+						};
+						service.OnDoPostServerJson(updateSignInfo, true, true, function(jsonData){
+							if (jsonData.result == 0){
+								plus.nativeUI.toast("修改成功");
+								service.SetUserInfo("sign", signInfo.value);
+								
+				          	 	var myData = plus.webview.getWebviewById("myData.html");
+								if(myData == null){
+									mui.alert("ID not find!");
+								}else{
+									mui.fire(myData, "refurbish");
+								}
+								var editMyData = plus.webview.getWebviewById("editMyData");
+								if(editMyData == null){
+									mui.alert("ID not find!");
+								}else{
+									mui.fire(editMyData, "refurbish");
+								}
+								mui.back();
+							} else {
+								mui.alert('修改失败', '',function(){
+									mui.back();
+								});
+							}
+						});
+					}
+					else
+						mui.back();
+				});
+			});
+
+			
+		</script>
+	</body>
+</html>

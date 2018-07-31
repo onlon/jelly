@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>消息</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/jelly-header-icon.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			.title {
+				padding: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+				background-color: #fff;
+			}
+			.iw{
+				width: 60px;
+			}
+			.text-xs{
+				font-size: 12px;
+			}
+			.text-black{
+				color: #000000;
+			}
+			.mui-table-cell{
+				vertical-align: top;
+			}
+			.mui-table-cell img{
+				width: 50px;
+			}
+			.noo:before{
+				background-color: #efeff4;
+			}
+			.noo:after{
+				background-color: #efeff4;
+			}
+			.mui-table-view{
+				margin-top: 7px;
+			}
+			.mui-table-view-cell>a:not(.mui-btn){
+				white-space: inherit;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00DB00;">
+				<span class="mui-icon mui-icon-left-nav"></span>
+				<font size="2" id="backWebName">果冻帮</font>
+			</button>
+			<h1 class="mui-title">消息</h1>
+		</header>
+		<div class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div id="msgList" style="margin-top: 52px;">
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/service.js"></script>
+		<script src="js/tools.js"></script>
+		<script>
+			mui.init({
+				swipeBack: false
+			});
+			mui('.mui-scroll-wrapper').scroll({indicators: false});//使页面带有滚动且隐藏滚动条
+			
+			mui.plusReady(function(){
+				tools.StringFormatDemo();
+				getMsg();
+				
+			});
+			
+			var getMsg = function(){
+				var msg = {
+					reqKey: "toGetMsg",
+					input: {
+						phone: localStorage.getItem("userID")
+					}
+				};
+				//此函数任然是异步执行，故放里面没用
+				service.OnDoPostServerJson(msg, true, false, function(jsonData){
+					if (jsonData.result == 0){
+						OnMsgInfo(jsonData["ansData"]);
+					} else { 
+						mui.alert("post 请求失败");
+					}
+				});
+			};
+			var ToUpdateMsgState = function(msgID,is_received){
+				var msg = {
+					reqKey: "isReceivedMsg",
+					input: {
+						msg_id:msgID,
+						is_received: is_received
+					}
+				};
+				//此函数任然是异步执行，故放里面没用
+				service.OnDoPostServerJson(msg, false, false, function(jsonData){
+					if (jsonData.result == 0){
+					} else { 
+						tools.resultError(jsonData.result);
+					}
+				});
+			};
+			var ToOrder = function(msgs){
+				mui("#msgList").on("tap",".mui-table-view-cell",function(){
+				  	//获取id
+				  	var id =  this.getAttribute("id");
+				  	var tmp = parseInt(id.substring(5,id.length));
+				  	if(msgs[tmp]["is_received"] == 0){
+				  		ToUpdateMsgState(msgs[tmp]["msg_id"],1);
+				  		msgs[tmp]["is_received"] = 1;
+				  		
+				  		var isRed = document.body.querySelector("#msgList #"+id+" #isRed");
+				  		isRed.style.color = "#00BD00";
+				  	}
+				  	if(msgs[tmp]["order_id"].length != 0){
+				  		mui.openWindow({
+					    	url:'./home/task.html',
+						    id:'task',
+						 	show:{
+						      autoShow:true,
+						      aniShow:'slide-in-right',//页面显示动画，默认为”slide-in-right“；
+						      duration:300//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+						    },
+						    waiting:{
+						      	autoShow:false
+						    },
+						    extras:{
+						        taskid: msgs[tmp]["order_id"],
+						        webBackName:"我的消息"
+						    }
+						});
+				  	}
+				});
+			};
+			
+			var OnMsgInfo = function(msginfo){
+				if(msginfo){
+					JSON.stringify(msginfo);
+					ToOrder(msginfo);//监听
+					var table = document.body.querySelector('#msgList');
+					for(var i = 0 ; i < msginfo.length ; i++)
+					{
+						var headImg = service.GetImgSrc("head","adminer.png");
+						var time1 = "";
+						if(msginfo[i]["send_time"]){
+//							console.log(msginfo[i]["send_time"]);
+							var time0 = msginfo[i]["send_time"].split("T");
+							time1 += time0[0].split("-")[1]+"/" +time0[0].split("-")[2] + " ";
+							time1 += time0[1].split(":")[0] + ":" + time0[1].split(":")[1];
+						}
+						var ul = document.createElement('ul');
+						ul.className = 'mui-table-view noo';
+						li = document.createElement('li');
+						li.className = 'mui-table-view-cell mui-media';
+						li.id = "order"+i;
+						li.type = "1";
+						var msgContent = msginfo[i]["msg_content"];
+						
+//						var tmpStr = "";
+//						var flag = false;
+//						while (true) {
+//							if(msgContent.length < 12){
+//								tmpStr += msgContent;
+//								break;
+//							}
+////							if (!flag) {
+////								tmpStr += msgContent.substr(0,13);
+////								tmpStr += ' <br/>';
+////								msgContent = msgContent.substr(13,msgContent.length);
+////								flag = true;
+////							}
+//							tmpStr += '&nbsp;&nbsp;&nbsp;&nbsp;';
+//							tmpStr += msgContent.substr(0,18);
+//							tmpStr += '<br/>';
+//							msgContent = msgContent.substr(18,msgContent.length);
+//						}
+						li.innerHTML = "<a >\
+								<img class='mui-media mui-pull-left' style='width: 50px;margin-left: 10px;border-radius: 25px;' src='{0}' >\
+								<div class='mui-media-body' style='padding-left:5%;'>\
+									<span id='isRed' class='mui-icon jelly-header-icon icon-lingdang' style='color: #00BD00;font-size: 17px;margin-top: 7px;'></span>\
+									<p size='2' style='color: gray;'> {2}</p>\
+									<span class='mui-pull-right' style='color: #00BD00;font-size: 13px;font-weight: 800;'>{1}</span>\
+								</div>\
+							</a>".format(headImg, time1,msgContent);
+						ul.insertBefore(li,ul.firstChild);
+						table.insertBefore(ul,table.firstChild);
+						
+						if (msginfo[i]["is_received"] == 1) {
+							document.getElementById("isRed").style.color = "#00BD00";
+						} else{
+							document.getElementById("isRed").style.color = "#FF5053";
+						}
+					}
+				}else{
+					listNoClass("msgList","暂无消息");
+				}
+			};
+			
+			var listNoClass = function(id,name){
+				tools.StringFormatDemo();
+				document.getElementById(id).innerHTML = "<ul class='mui-table-view noo'>\
+															<li class='mui-table-view-cell' style='text-align: center;background-color: #efeff4;'>\
+																<br />\
+																<br />\
+																<img src='./images/zanwu.png' style='width: 120px;opacity:0.4'/>\
+																<br />\
+																<span style='font-size: 14px;color: gray;'>{0}</span>\
+																<br />\
+																<br />\
+															</li>\
+														</ul>".format(name);
+			};
+//			/**
+//			 * 下拉刷新具体业务实现
+//			 */
+//			function pulldownRefresh() {
+//				setTimeout(function() {
+//					var table = document.body.querySelector('.mui-table-view');
+//					var cells = document.body.querySelectorAll('.mui-table-view-cell');
+//					for (var i = cells.length, len = i + 3; i < len; i++) {
+//						var li = document.createElement('li');
+//						li.className = 'mui-table-view-cell';
+//						li.innerHTML = '<a href="" class="mui-navigate-right"><div class="mui-slider"><div class="mui-table"><div class="mui-table-cell iw"><img src="images/home_task_avatar.jpg" /></div><div class="mui-table-cell"><p class="text-black">UserName</p><p class="text-xs">Content</p></div></div></div></a>';
+//						//下拉刷新，新纪录插到最前面；
+//						table.insertBefore(li, table.firstChild);
+//					}
+//					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+//				}, 1000);
+//			}
+//			var count = 0;
+//			/**
+//			 * 上拉加载具体业务实现
+//			 */
+//			function pullupRefresh() {
+//				setTimeout(function() {
+//					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
+//					var table = document.body.querySelector('.mui-table-view');
+//					var cells = document.body.querySelectorAll('.mui-table-view-cell');
+//					for (var i = cells.length, len = i + 20; i < len; i++) {
+//						var li = document.createElement('li');
+//						li.className = 'mui-table-view-cell';
+//						li.innerHTML = '<a href="" class="mui-navigate-right"><div class="mui-slider"><div class="mui-table"><div class="mui-table-cell iw"><img src="images/home_task_avatar.jpg" /></div><div class="mui-table-cell"><p class="text-black">UserName</p><p class="text-xs">Content</p></div></div></div></a>';
+//						table.appendChild(li);
+//					}
+//				}, 1000);
+//			}
+		</script>
+	</body>
+</html>

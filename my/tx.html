@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>果冻帮提现</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<title></title>
+		<style type="text/css">
+			::-webkit-input-placeholder { 
+				font-size: 14px;
+				color: gray;
+				font-weight: 400;
+				/*color:#0FA1F2;*/ 
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: #00BD00;">
+				<span class="mui-icon mui-icon-left-nav"></span>
+				<font size="2">我的钱包</font>
+			</button>
+			<h1 class="mui-title">提现</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div class="mui-input-row mui-card" style="margin-top: 57px;">
+						<input type="text" id="alipay" placeholder="请输入支付宝账户" style="border: none;font-size: 14px;" ></input>
+						<input type="text" id="alipay-name"  placeholder="请输入支付宝账户姓名" style="border: none;font-size: 14px;" ></input>
+						<input type="text" id="money" placeholder="请输入提现金额  （ 元 ）" style="border: none;font-size: 14px;" onkeyup="amount(this)"></input>
+					</div>
+					<div style="text-align: center;margin-top: 10px;">
+						<button id="suBtn" style="width: 90%;background-color: #00bd00;
+							border: none;height: 40px;">
+							<font color="aliceblue">确认提现</font>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/service.js"></script>
+		<script src="../js/tools.js"></script>
+		<script type="text/javascript">
+		mui.init({
+			swipeBack: true //启用右滑关闭功能
+		});
+		mui('.mui-scroll-wrapper').scroll({indicators: false});//使页面带有滚动且隐藏滚动条
+		
+		
+		//页面打开时加载函数，只执行一次
+		mui.plusReady(function(){
+				
+			document.getElementById("suBtn").addEventListener('tap',function(){
+				if (document.getElementById("money").value == "" && parseFloat(document.getElementById("money").value) <= 0) {
+					plus.nativeUI.toast("请输入正确的提现金额~");
+				} else{
+					document.getElementById("suBtn").disabled = true;
+					var money = document.getElementById("money").value;
+					var alipay = document.getElementById("alipay").value;
+					var alipay_name = document.getElementById("alipay-name").value;
+					if (money && alipay && alipay_name) {
+						var req = {
+							reqKey: "getBalance",
+							input: { 
+								phone:localStorage.getItem("userID")
+							}
+						};
+						//json请求 doserver
+						service.OnDoPostServerJson(req, true, true, function(jsonData){//jsonData即会返回的结果
+							if (jsonData.result == 0) {
+								var balance = parseFloat(jsonData["ansData"][0]["balance"]) - parseFloat(money);
+								if (balance >= 0) {
+									var btnArray = ['等一会儿', '确认提现'];
+									mui.confirm("确认提现" + document.getElementById("money").value +"元？", '提醒', btnArray, function(e) {
+										if (e.index == 1) {
+											toTx(money,alipay,alipay_name,balance);
+										}else{
+											document.getElementById("suBtn").disabled = false;
+										}
+									}); 
+								} else{
+									document.getElementById("suBtn").disabled = false;
+									plus.nativeUI.toast("余额不足，你最多提现" + jsonData["ansData"][0]["balance"] + "元");
+								}
+							} else{
+								document.getElementById("suBtn").disabled = false;
+								plus.nativeUI.toast("网络错误，请检查你的网络");
+							}
+						}); 
+					}else{
+						document.getElementById("suBtn").disabled = false;
+						plus.nativeUI.toast("提现信息需全部填写~");
+					}
+				}
+			});
+		});
+		
+		var amount = function(th){
+		    var regStrs = [
+		        ['^0(\\d+)$', '$1'], //禁止录入整数部分两位以上，但首位为0
+		        ['[^\\d\\.]+$', ''], //禁止录入任何非数字和点
+		        ['\\.(\\d?)\\.+', '.$1'], //禁止录入两个以上的点
+		        ['^(\\d+\\.\\d{2}).+', '$1'] //禁止录入小数点后两位以上
+		    ];
+		    for(i=0; i<regStrs.length; i++){
+		        var reg = new RegExp(regStrs[i][0]);
+		        th.value = th.value.replace(reg, regStrs[i][1]);
+		    }
+		};
+		
+		var toTx = function(money,alipay,alipay_name,ba){
+			var totx = {
+				reqKey: "toWithdrawCashReq",
+				input: {
+					phone:localStorage.getItem("userID"),
+					Alipay: alipay,
+					Alipay_realname:alipay_name,
+					money:money
+				}
+			};
+			
+			//json请求 doserver
+			service.OnDoPostServerJson(totx, true, true, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					updateBa(ba);
+				}
+				else{
+					document.getElementById("suBtn").disabled = false;
+					plus.nativeUI.toast("服务器忙，请稍后再试~");
+				}
+			}); 
+		};
+		
+		var updateBa = function(balance){
+			var tocz = {
+				reqKey: "editBalance",
+				input: {
+					phone: localStorage.getItem("userID"),
+					balance: balance.toString()
+				}
+			};
+			service.OnDoPostServerJson(tocz, true, true, function(jsonData){//jsonData即会返回的结果
+				if (jsonData.result == 0){
+					var mymoney = plus.webview.getWebviewById("mymoney");
+					if(mymoney == null){
+						mui.alert("ID not find!");
+					}else{
+	               		mui.fire(mymoney, "refurbishmoney");
+					}
+					
+					mui.alert("提现申请已提交，请耐心等待···\n由于人流量较大，申请会在1-3个工作日完成，请注意查收~","提现申请成功",function(){
+						mui.back();
+					});
+				}
+				else{
+					document.getElementById("suBtn").disabled = false;
+					plus.nativeUI.toast("服务器忙，请稍后再试~");
+				}
+			}); 
+		};
+		
+		</script>
+	</body>
+</html>
